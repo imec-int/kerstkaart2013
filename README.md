@@ -60,7 +60,7 @@ chop tree_1200x1000.png into smaller images
 convert out/tree_1200x1000.png +gravity -crop 100x100 out/tree_%03d.png
 ```
 
-to test the tile command, stitch the chopped up image back together"
+to test the tile command, stitch the chopped up image back together
 ```
 montage 'out/tree_%03d.png[0-119]' -tile 12x10 -geometry +0+0 out/tree_stitched_back_together.png
 ```
@@ -70,10 +70,11 @@ convert the original images to tiles of 100x100
 convert 'data/a%03d.jpg[1-120]' -resize 100x100^ -gravity center -extent 100x100 out/images_%03d.png
 ```
 
-** overlay the tree tiles with the cropped images **
-** still need to figure that out **
+**overlay the tree tiles with the cropped images**
 
-stitch the overlayed images back together"
+**still need to figure that out**
+
+stitch the overlayed images back together
 ```
 montage 'out/images_%03d.png[0-119]' -tile 12x10 -geometry +0+0 out/stitched_overlayed_image.png
 ```
