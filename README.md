@@ -10,13 +10,14 @@
 
 ## Research
 * [http://www.christinabergey.com/notes_code/nc.php?topic=similar_img_mosaic](http://www.christinabergey.com/notes_code/nc.php?topic=similar_img_mosaic)
+* [http://www.designamosaic.com/photo-mosaic-process](http://www.designamosaic.com/photo-mosaic-process)
 
 ## Installing ImageMagick
 * [install brew](http://brew.sh/)
 * ```brew upgrade```
 * ```brew update```
 * ```brew install imagemagick```
-* test it: eg run ```montage```
+* test it: eg run ```convert``` or run ```montage```
 
 ### Troubleshooting
 on errors like:
