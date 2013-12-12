@@ -33,13 +33,13 @@ Install Ghostscript using ```brew install ghostscript```
 * [more on the ImageMagick geometry parameters](http://www.imagemagick.org/script/command-line-processing.php#geometry)
 
 ### Cropping images
-Convert 1 file:
+crop 1 file
 ```    
 convert orig_file.jpg -resize 200x200^ -gravity center -extent 200x200 output_file.png
 ```
-Convert all files:
+crop all files
 ```
-convert 'a%03d.jpg[1-200]' -resize 200x200^ -gravity center -extent 200x200 cropped_%03d.png
+convert 'a_%03d.jpg[1-200]' -resize 200x200^ -gravity center -extent 200x200 cropped_%03d.png
 ```
 
 ### Stitching images together as one
@@ -49,3 +49,31 @@ montage 'cropped_%03d.png[0-199]' -tile 20x20 -geometry +0+0 tiles_mosaic.png
 * **-tile 20x20** : number of images horizontally and vertically
 * **-geometry +0+0** : offset of image (+10+0) creates a margin of 20px horizontally
 
+### Project specific commands
+crop tree.jpg to 1200x1000
+```
+convert data/tree.jpg -gravity center -extent 1200x1000 out/tree_1200x1000.png
+```
+
+chop tree_1200x1000.png into smaller images
+```
+convert out/tree_1200x1000.png +gravity -crop 100x100 out/tree_%03d.png
+```
+
+to test the tile command, stitch the chopped up image back together"
+```
+montage 'out/tree_%03d.png[0-119]' -tile 12x10 -geometry +0+0 out/tree_stitched_back_together.png
+```
+
+convert the original images to tiles of 100x100
+```
+convert 'data/a%03d.jpg[1-120]' -resize 100x100^ -gravity center -extent 100x100 out/images_%03d.png
+```
+
+** overlay the tree tiles with the cropped images **
+** still need to figure that out **
+
+stitch the overlayed images back together"
+```
+montage 'out/images_%03d.png[0-119]' -tile 12x10 -geometry +0+0 out/stitched_overlayed_image.png
+```
