@@ -11,6 +11,7 @@
 ## Research
 * [http://www.christinabergey.com/notes_code/nc.php?topic=similar_img_mosaic](http://www.christinabergey.com/notes_code/nc.php?topic=similar_img_mosaic)
 * [http://www.designamosaic.com/photo-mosaic-process](http://www.designamosaic.com/photo-mosaic-process)
+* [video about HUE vs RGB](http://www.youtube.com/watch?v=wp-fZ-2aUWo)
 
 ## Installing ImageMagick
 * [install brew](http://brew.sh/)
@@ -69,6 +70,11 @@ montage 'out/tree_%03d.png[0-119]' -tile 12x10 -geometry +0+0 out/tree_stitched_
 convert the original images to tiles of 100x100
 ```
 convert 'data/a%03d.jpg[1-120]' -resize 100x100^ -gravity center -extent 100x100 out/images_%03d.png
+```
+
+find the average HSB color of an image:
+```
+convert out/pink.png -colorspace HSB -scale 1x1 -format "%[fx:360*r] graden, %[fx:100*g]%%, %[fx:100*b]%%\n" info:
 ```
 
 **overlay the tree tiles with the cropped images**
