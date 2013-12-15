@@ -1,44 +1,40 @@
 
-var im = require('imagemagick');
+var imagemagick = require('./imagemagick');
 var fs = require('fs');
+var async = require('async');
 
 var inputfile = '../tests/out/pink.png';
 
-function getAverageColor(file, callback){
-	im.convert([
-		file,
-		"-colorspace" , "rgb",
-		"-scale"      , "1x1",
-		"-format"     , "'%[pixel:u]'",
-		"info:"
-	], function (err, data){
-		if (err) return callback(err);
-		var rgb = data.replace(/'(.+)'/, '$1');
-		return callback(null, rgb);
-	});
-}
-
-function createSolidImage(size, rgb, outputfile){
-	im.convert([
-		"-size"       , size,
-		"xc:"         + rgb,
-		outputfile,
-	], function (err, data){
-		if (err) throw err;
-		console.log(data);
-	});
-}
 
 
-for (var i = 0; i < 200; i++) {
-	var inputfile = '../tests/data/a' + i + '.jpg'
+var inputfiles = [];
+for (var i = 0; i < 120; i++) {
+	var inputfile = '../tests/out/tree_'+pad(i,3)+'.png';
+	inputfiles.push(inputfile);
 };
 
-getAverageColor(inputfile, function (err, rgb){
-	createSolidImage("100x100", rgb, 'test.png');
+
+async.forEachSeries(inputfiles, function (inputfile, $){
+	console.log(inputfile);
+	imagemagick.getAverageRGBColor(inputfile, function (err, rgb){
+		if(err) return $(err);
+
+		imagemagick.createSolidImage("100x100", rgb, inputfile.replace(/tree_/, 'tree_solid_'), function (err, data){
+			if(err) return $(err);
+			$();
+		});
+
+	});
+}, function (err){
+	if(err) return console.log(err);
+	console.log("done");
 });
 
 
 
 
-
+function pad(n, width, z) {
+	z = z || '0';
+	n = n + '';
+	return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+}
