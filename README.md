@@ -53,6 +53,11 @@ montage 'cropped_%03d.png[0-199]' -tile 20x20 -geometry +0+0 tiles_mosaic.png
 * **-tile 20x20** : number of images horizontally and vertically
 * **-geometry +0+0** : offset of image (+10+0) creates a margin of 20px horizontally
 
+### Filling an image with a specific color
+```
+convert images_005.png -fill 'rgb(198,0,255)' -tint 100 images_005_red.png
+``
+
 ### Project specific commands
 crop tree.jpg to 1200x1000
 ```
