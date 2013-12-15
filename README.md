@@ -12,7 +12,7 @@
 * [http://www.christinabergey.com/notes_code/nc.php?topic=similar_img_mosaic](http://www.christinabergey.com/notes_code/nc.php?topic=similar_img_mosaic)
 * [http://www.designamosaic.com/photo-mosaic-process](http://www.designamosaic.com/photo-mosaic-process)
 * [video about HUE vs RGB](http://www.youtube.com/watch?v=wp-fZ-2aUWo)
-* [modulate the HSB values](http://www.imagemagick.org/Usage/color_mods/#modulate)
+
 
 ## Installing ImageMagick
 * [install brew](http://brew.sh/)
@@ -34,6 +34,7 @@ Install Ghostscript using ```brew install ghostscript```
 
 ### Documentation
 * [more on the ImageMagick geometry parameters](http://www.imagemagick.org/script/command-line-processing.php#geometry)
+* [modulate the HSB values](http://www.imagemagick.org/Usage/color_mods/#modulate)
 
 ### Cropping images
 crop 1 file
