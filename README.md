@@ -12,6 +12,7 @@
 * [http://www.christinabergey.com/notes_code/nc.php?topic=similar_img_mosaic](http://www.christinabergey.com/notes_code/nc.php?topic=similar_img_mosaic)
 * [http://www.designamosaic.com/photo-mosaic-process](http://www.designamosaic.com/photo-mosaic-process)
 * [video about HUE vs RGB](http://www.youtube.com/watch?v=wp-fZ-2aUWo)
+* [modulate the HSB values](http://www.imagemagick.org/Usage/color_mods/#modulate)
 
 ## Installing ImageMagick
 * [install brew](http://brew.sh/)
@@ -77,9 +78,10 @@ find the average HSB color of an image:
 convert out/pink.png -colorspace HSB -scale 1x1 -format "%[fx:360*r] graden, %[fx:100*g]%%, %[fx:100*b]%%\n" info:
 ```
 
-**overlay the tree tiles with the cropped images**
-
-**still need to figure that out**
+multiply one image with another
+```
+composite -compose Multiply -gravity center img1.png img2 compose_multiply.png
+```
 
 stitch the overlayed images back together
 ```
