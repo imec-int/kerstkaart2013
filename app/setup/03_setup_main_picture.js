@@ -1,5 +1,8 @@
-// ***********************************************************
-// *** SETUP: will setup main image with placeholder tiles ***
+// ******************************************
+// *** SETUP: scales and crops main image ***
+// ***        splits it into tiles        ***
+// ***            analyzes tiles          ***
+// ***         adds them to the DB        ***
 // ***********************************************************
 // **** BE CAREFUL, THIS CLEANS THE TILES IN THE DATABASE ****
 // ***********************************************************
@@ -8,14 +11,15 @@ var async = require('async');
 var util = require('util');
 var printf = require('printf');
 
-var config = require('./config');
-var image = require('./image');
-var mongobase = require('./mongobase')
+var config = require('../config');
+var image = require('../image');
+var mongobase = require('../mongobase')
 
 var tilesWidth, tilesHeight, totalTiles, mainImageWidth, mainImageHeight, croppedMainImage, d, tiles;
 
 
 // CLEANS THE TILES:
+console.log('> cleaning DB:')
 mongobase.clearTiles();
 
 async.waterfall([
@@ -23,11 +27,10 @@ async.waterfall([
 		// proposed dimensions for mosaic, based on aspect ratio and number of wanted tiles
 		tilesHeight = Math.round( Math.sqrt(config.mosaic.maxtiles/(config.mosaic.aspectratio)) );
 		tilesWidth = Math.round( config.mosaic.maxtiles / tilesHeight );
-
-		console.log('width(#tiles): ' + tilesWidth);
-		console.log('height(#tiles): ' + tilesHeight);
-		console.log('total #tiles: ' + tilesWidth*tilesHeight);
 		totalTiles = tilesWidth*tilesHeight;
+
+		console.log('> mosaic will be ' + tilesWidth + ' tilew wide and ' + tilesHeight + ' tiles heigh');
+		console.log('> that\'s a total of ' + totalTiles + ' tiles');
 
 		// 4 digits = %04d
 		d = '%0'+(''+totalTiles).length+'d';
@@ -48,7 +51,6 @@ async.waterfall([
 	},
 
 	function (data, $){
-		console.log(data);
 
 		// recreate the filenames ImageMagick made using the tileFiles string:
 		tiles = [];
@@ -74,6 +76,7 @@ async.waterfall([
 		// console.log(tiles);
 
 		// save these tiles to the DB:
+		console.log('> saving all tiles to the DB:')
 		async.eachLimit(tiles, 100, function (tile, $for){
 			mongobase.saveTile(tile, function (err, data){
 				if(err) return $for(err);
@@ -83,12 +86,12 @@ async.waterfall([
 	}
 ], function (err){
 	if(err) return console.log(err);
-	return console.log('done');
+	return console.log('> DONE, you can CTRL-C this');
 });
 
 
 function cropMainImage (callback){
-	console.log('cropping main image to: ' + mainImageWidth + 'x' + mainImageHeight);
+	console.log('> cropping main image to: ' + mainImageWidth + 'x' + mainImageHeight);
 	var croppedImage = path.join(__dirname, config.mosaic.folders.root, config.mosaic.folders.main, 'main_cropped.png');
 	image.crop( path.join(__dirname, config.mosaic.folders.root, config.mosaic.mainimage), mainImageWidth, mainImageHeight, croppedImage, function (err, data){
 		if(!callback) return;
@@ -101,7 +104,7 @@ function sliceMainImage (callback) {
 	var tileFiles = path.join( config.mosaic.folders.main, 'tile_'+d+'.png' );
 	var outputfiles = path.join(__dirname, config.mosaic.folders.root, tileFiles);
 
-	console.log('slicing main image into tiles of ' + config.mosaic.tile.width + 'x' + config.mosaic.tile.height + ' into ' + outputfiles);
+	console.log('> slicing main image into tiles of ' + config.mosaic.tile.width + 'x' + config.mosaic.tile.height + ' into ' + outputfiles);
 
 	image.slice( croppedMainImage, config.mosaic.tile.width, config.mosaic.tile.height, outputfiles, function (err, data){
 		if(!callback) return;

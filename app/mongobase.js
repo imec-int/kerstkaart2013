@@ -1,12 +1,12 @@
 var mongojs = require('mongojs');
-var db = mongojs('kerstkaart2013', ['tiles']);
+var db = mongojs('kerstkaart2013', ['tiles', 'bootstraptiles']);
 
 
 function clearTiles (callback){
 	db.tiles.remove(function (err, res) {
-		if(err) return console.log(err);
-		return console.log(res);
-	})
+		if(err) return callback(err);
+		return callback(null, res);
+	});
 }
 
 function saveTile(tile, callback){
@@ -14,12 +14,12 @@ function saveTile(tile, callback){
 
 	tile._id = tile.index; // tiles are unique by their index
 
-	db.tiles.save(tile, function (err, data) {
+	db.tiles.save(tile, function (err, res) {
 		if(!callback) return;
 
 		if(err) return callback(err);
-		if(data == 1) return callback(null, tile);
-		else return callback(null, data);
+		if(res == 1) return callback(null, tile);
+		else return callback(null, res);
 	});
 }
 
@@ -32,7 +32,36 @@ function getTile (index, callback) {
 	});
 }
 
+function saveBootraptile (tile, callback){
+	db.bootstraptiles.save(tile, function (err, res) {
+		if(!callback) return;
+
+		if(err) return callback(err);
+		if(res == 1) return callback(null, tile);
+		else return callback(null, res);
+	});
+}
+
+function clearBootstrapTiles (callback){
+	db.bootstraptiles.remove(function (err, res) {
+		if(err) return callback(err);
+		return callback(null, res);
+	});
+}
+
+function getAllBoostrapTiles (callback) {
+	db.bootstraptiles.find({},function (err, res) {
+		if(err) return callback(err);
+		return callback(null, res);
+	});
+}
+
+
+
 exports.clearTiles = clearTiles;
 exports.saveTile = saveTile;
 exports.getTile = getTile;
+exports.saveBootraptile = saveBootraptile;
+exports.clearBootstrapTiles = clearBootstrapTiles;
+exports.getAllBoostrapTiles = getAllBoostrapTiles;
 
