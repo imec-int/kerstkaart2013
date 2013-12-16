@@ -15,7 +15,10 @@ var config = require('../config');
 var image = require('../image');
 var mongobase = require('../mongobase')
 
-var tilesWidth, tilesHeight, totalTiles, mainImageWidth, mainImageHeight, croppedMainImage, d, tiles;
+var ROOTDIR = path.join('../', config.mosaic.folders.root);
+
+var tilesWide, tilesHeigh, totalTiles, mainImageWidth, mainImageHeight, croppedMainImage, d, tiles;
+var hqWidth, hqHeight, hqMainImage;
 
 
 // CLEANS THE TILES:
@@ -25,20 +28,27 @@ mongobase.clearTiles();
 async.waterfall([
 	function ($){
 		// proposed dimensions for mosaic, based on aspect ratio and number of wanted tiles
-		tilesHeight = Math.round( Math.sqrt(config.mosaic.maxtiles/(config.mosaic.aspectratio)) );
-		tilesWidth = Math.round( config.mosaic.maxtiles / tilesHeight );
-		totalTiles = tilesWidth*tilesHeight;
+		tilesHeigh = Math.round( Math.sqrt(config.mosaic.maxtiles/(config.mosaic.aspectratio)) );
+		tilesWide = Math.round( config.mosaic.maxtiles / tilesHeigh );
+		totalTiles = tilesWide*tilesHeigh;
 
-		console.log('> mosaic will be ' + tilesWidth + ' tilew wide and ' + tilesHeight + ' tiles heigh');
+		console.log('> mosaic will be ' + tilesWide + ' tiles wide and ' + tilesHeigh + ' tiles heigh');
 		console.log('> that\'s a total of ' + totalTiles + ' tiles');
+
+		hqWidth = tilesWide * config.mosaic.tilehq.width;
+		hqHeight = tilesHeigh * config.mosaic.tilehq.height;
+
+		console.log('> the HQ of the mosaic will be ' + hqWidth+'x'+hqHeight);
+
 
 		// 4 digits = %04d
 		d = '%0'+(''+totalTiles).length+'d';
 
 		// width and height the main image should be, based on the number of tiles and tile size:
-		mainImageWidth = tilesWidth * config.mosaic.tile.width;
-		mainImageHeight = tilesHeight * config.mosaic.tile.height;
-		$()
+		mainImageWidth = tilesWide * config.mosaic.tile.width;
+		mainImageHeight = tilesHeigh * config.mosaic.tile.height;
+
+		$();
 	},
 
 	function ($) {
@@ -47,6 +57,22 @@ async.waterfall([
 
 	function (image, $) {
 		croppedMainImage = image;
+
+		createHQMainImage($)
+	},
+
+	function (image, $) {
+		hqMainImage = image;
+
+		// save this config to db:
+		mongobase.saveConfig({
+			tilesWide: tilesWide,
+			tilesHeigh: tilesHeigh,
+			mainimage: croppedMainImage,
+			mainimagehq: hqMainImage
+		}, $);
+	},
+	function (res, $) {
 		sliceMainImage($);
 	},
 
@@ -76,7 +102,7 @@ async.waterfall([
 		// console.log(tiles);
 
 		// save these tiles to the DB:
-		console.log('> saving all tiles to the DB:')
+		console.log('> saving all tiles to the DB')
 		async.eachLimit(tiles, 100, function (tile, $for){
 			mongobase.saveTile(tile, function (err, data){
 				if(err) return $for(err);
@@ -92,8 +118,20 @@ async.waterfall([
 
 function cropMainImage (callback){
 	console.log('> cropping main image to: ' + mainImageWidth + 'x' + mainImageHeight);
-	var croppedImage = path.join(__dirname, config.mosaic.folders.root, config.mosaic.folders.main, 'main_cropped.png');
-	image.crop( path.join(__dirname, config.mosaic.folders.root, config.mosaic.mainimage), mainImageWidth, mainImageHeight, croppedImage, function (err, data){
+	var croppedImage = path.join(config.mosaic.folders.mosaic, 'main_cropped.png');
+	var absoluteCroppedImage = path.join(ROOTDIR, croppedImage);
+	image.crop( path.join(ROOTDIR, config.mosaic.mainimage), mainImageWidth, mainImageHeight, absoluteCroppedImage, function (err, data){
+		if(!callback) return;
+		if(err) return callback(err);
+		return callback(null, croppedImage);
+	});
+}
+
+function createHQMainImage (callback){
+	console.log('> cropping main image to: ' + hqWidth + 'x' + hqHeight);
+	var croppedImage = path.join(config.mosaic.folders.mosaic, 'main_hq_cropped.jpg');
+	var absoluteCroppedImage = path.join(ROOTDIR, croppedImage);
+	image.crop( path.join(ROOTDIR, config.mosaic.mainimage), hqWidth, hqHeight, absoluteCroppedImage, function (err, data){
 		if(!callback) return;
 		if(err) return callback(err);
 		return callback(null, croppedImage);
@@ -102,11 +140,11 @@ function cropMainImage (callback){
 
 function sliceMainImage (callback) {
 	var tileFiles = path.join( config.mosaic.folders.main, 'tile_'+d+'.png' );
-	var outputfiles = path.join(__dirname, config.mosaic.folders.root, tileFiles);
+	var outputfiles = path.join(ROOTDIR, tileFiles);
 
 	console.log('> slicing main image into tiles of ' + config.mosaic.tile.width + 'x' + config.mosaic.tile.height + ' into ' + outputfiles);
 
-	image.slice( croppedMainImage, config.mosaic.tile.width, config.mosaic.tile.height, outputfiles, function (err, data){
+	image.slice( path.join(ROOTDIR, croppedMainImage), config.mosaic.tile.width, config.mosaic.tile.height, outputfiles, function (err, data){
 		if(!callback) return;
 		if(err) return callback(err);
 		return callback(null, {
@@ -119,7 +157,7 @@ function sliceMainImage (callback) {
 function getAverageColor(tile, callback){
 	var res = {};
 
-	var filename = path.join(__dirname, config.mosaic.folders.root, tile);
+	var filename = path.join(ROOTDIR, tile);
 
 	image.getAverageRGBColor(filename, function (err, rgb){
 		if(err) return callback(err);

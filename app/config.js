@@ -2,16 +2,21 @@
 
 exports.mosaic = {
 	folders:{
-		root: '/public/mosaic/',
-		main: 'main/',
-		bootstrap: 'bootstrap/',
-		user: 'user/'
+		root       : '/public/mosaic/',
+		main       : 'main/',
+		bootstrap  : 'bootstrap/',
+		user       : 'user/',
+		mosaic     : 'mosaic/'
 	},
 	mainimage: 'cute-baby-wallpaper1.jpg',
-	maxtiles: 400, // aim at 400 tiles, should be more in production ( 4000? )
+	maxtiles: 4000,    // aim at x tiles
 	aspectratio: 16/9,
 	tile:{
 		width: 20,
 		height: 20
+	},
+	tilehq:{
+		width: 200,
+		height: 200
 	}
 };
