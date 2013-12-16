@@ -56,7 +56,7 @@ montage 'cropped_%03d.png[0-199]' -tile 20x20 -geometry +0+0 tiles_mosaic.png
 ### Filling an image with a specific color
 ```
 convert images_005.png -fill 'rgb(198,0,255)' -tint 100 images_005_red.png
-``
+```
 
 ### Project specific commands
 crop tree.jpg to 1200x1000
