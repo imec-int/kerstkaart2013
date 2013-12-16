@@ -102,12 +102,50 @@ function modulate(inputfile, h, b, s, outputfile, callback){
 	});
 }
 
+function stitchImages (inputfiles, tilesWide, tilesHeigh, outputfile, callback) {
+	// montage img1.png img2.png img3.png -tile 12x10 -geometry +0+0 out/tree_stitched_back_together.png
+
+	var parameters = [
+		'-tile'      ,  tilesWide+'x'+tilesHeigh,
+		'-geometry'  ,  '+0+0',
+		outputfile
+	];
+
+	parameters = inputfiles.concat(parameters); // begin the parameters with the input files
+
+	im.montage(parameters, function (err, data){
+		if (err) return callback(err);
+		return callback(null, data);
+	});
+}
+
+function overlayImages (inputimage1, inputimage2, outputfile, callback){
+	// composite -compose Multiply -gravity center img1.png img2 compose_multiply.png
+
+	im.composite([
+		'-compose'   , 'Multiply',
+		'-gravity'   , 'center',
+		inputimage1,
+		inputimage2,
+		outputfile
+	], function (err, data){
+		if(!callback) return;
+
+		if (err) return callback(err);
+		return callback(null, data);
+	});
+
+
+}
+
 exports.crop = crop;
 exports.slice = slice;
 exports.getAverageRGBColor = getAverageRGBColor;
 exports.getAverageHSBColor = getAverageHSBColor;
 exports.createSolidImage = createSolidImage;
 exports.modulate = modulate;
+exports.stitchImages = stitchImages;
+exports.overlayImages = overlayImages;
 
 
 
