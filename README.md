@@ -61,12 +61,12 @@ convert images_005.png -fill 'rgb(198,0,255)' -tint 100 images_005_red.png
 ### Project specific commands
 crop tree.jpg to 1200x1000
 ```
-convert data/tree.jpg -gravity center -extent 1200x1000 out/tree_1200x1000.png
+convert data/tree.jpg -resize 1200x1000^ -gravity center -crop 1200x1000+0+0 out/tree_1200x1000.png
 ```
 
-chop tree_1200x1000.png into smaller images
+slice tree_1200x1000.png into smaller images
 ```
-convert out/tree_1200x1000.png +gravity -crop 100x100 out/tree_%03d.png
+convert +repage out/tree_1200x1000.png +gravity -crop 100x100 out/tree_%03d.png
 ```
 
 to test the tile command, stitch the chopped up image back together

@@ -1,5 +1,5 @@
 
-var imagemagick = require('./imagemagick');
+var image = require('./image');
 var mongobase = require('./mongobase');
 var fs = require('fs');
 var async = require('async');
@@ -34,20 +34,20 @@ var imagetile = '../tests/out/images_029.png';
 var outputfile = '../tests/out/images_029_pinkified.png';
 
 
-imagemagick.getAverageRGBColor(colortile, function (err, rgb){
+image.getAverageRGBColor(colortile, function (err, rgb){
 	if(err) return console.log(err);
 
 	console.log("average pink:");
 	console.log(rgb);
 });
 
-// imagemagick.getAverageHSBColor(colortile, function (err, hsb_pink){
+// image.getAverageHSBColor(colortile, function (err, hsb_pink){
 // 	if(err) return console.log(err);
 
 // 	console.log("average pink:");
 // 	console.log(hsb_pink);
 
-// 	imagemagick.getAverageHSBColor(imagetile, function (err, hsb_tile){
+// 	image.getAverageHSBColor(imagetile, function (err, hsb_tile){
 // 		if(err) return console.log(err);
 // 		console.log("average tile:");
 // 		console.log(hsb_tile);
@@ -67,11 +67,11 @@ imagemagick.getAverageRGBColor(colortile, function (err, rgb){
 // 		console.log("difference:");
 // 		console.log(difference);
 
-// 		imagemagick.modulate(imagetile, difference.h, difference.s, difference.b, outputfile, function (err, data){
+// 		image.modulate(imagetile, difference.h, difference.s, difference.b, outputfile, function (err, data){
 // 			if(err) return console.log(err);
 // 			console.log(data);
 
-// 			imagemagick.getAverageHSBColor(outputfile, function (err, hsb_outputfile){
+// 			image.getAverageHSBColor(outputfile, function (err, hsb_outputfile){
 // 				if(err) return console.log(err);
 // 				console.log("average outputfile:");
 // 				console.log(hsb_outputfile);
@@ -100,10 +100,10 @@ imagemagick.getAverageRGBColor(colortile, function (err, rgb){
 
 // async.forEachSeries(inputfiles, function (inputfile, $){
 // 	console.log(inputfile);
-// 	imagemagick.getAverageRGBColor(inputfile, function (err, rgb){
+// 	image.getAverageRGBColor(inputfile, function (err, rgb){
 // 		if(err) return $(err);
 
-// 		imagemagick.createSolidImage("100x100", rgb, inputfile.replace(/tree_/, 'tree_solid_'), function (err, data){
+// 		image.createSolidImage("100x100", rgb, inputfile.replace(/tree_/, 'tree_solid_'), function (err, data){
 // 			if(err) return $(err);
 // 			$();
 // 		});
