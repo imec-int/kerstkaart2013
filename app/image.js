@@ -21,11 +21,6 @@ function crop (inputfile, width, heigth, outputfile, callback) {
 function slice (inputfile, width, heigth, outputfiles, callback) {
 	// convert out/tree_1200x1000.png +gravity -crop 100x100 out/tree_%03d.png
 
-	console.log('SLICING');
-	console.log(inputfile);
-	console.log(width);
-	console.log(heigth);
-
 	im.convert([
 		inputfile,
 		'+repage'     ,
