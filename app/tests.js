@@ -1,7 +1,30 @@
 
 var imagemagick = require('./imagemagick');
+var mongobase = require('./mongobase');
 var fs = require('fs');
 var async = require('async');
+
+
+// mongobase.getTile(2, function (err, tile){
+// 	if(err) return console.log(err);
+
+// 	return console.log(tile);
+// });
+
+// var testtile = {
+// 	_id: 2,
+// 	originaltile: '/data/original/fdfd.png',
+// 	hsb: {h: 100, s: 100, b: 50},
+// 	rbg: {r: 255, g: 14 , b: 255},
+// 	placeholdertile: '/data/placeholder/placeholder_001.png',
+// 	realtile: null
+// };
+
+// mongobase.saveTile(testtile, function (err, data){
+// 	if(err) return console.log(err);
+// 	return console.log(data);
+// });
+
 
 // var inputfile = '../tests/out/pink.png';
 var inputfile = '../tests/out/images_029.png';
