@@ -5,21 +5,16 @@ var App = function (options){
 
 	var init = function (){
 		updateStatus("init");
-
 		fileuploadEl.bind('change', onFileuploadChange);
 	};
 
 	var onFileuploadChange = function (event){
-		console.log("file selected");
-
-		updateStatus("processing...");
+		updateStatus("uploading...");
 
 		uploadImage(event.target.files[0], function (data){
-			updateStatus(data);
+			console.log(data);
 
 			$("#mosaicimage").attr('src', data.mosaicimage);
-			$("#mosaicimage_overlayed").attr('src', data.mosaicimage_overlayed);
-
 		});
 	};
 
@@ -34,8 +29,6 @@ var App = function (options){
 			if (ev.lengthComputable) {
 				var percentage = (ev.loaded / ev.total) * 100 + "%";
 				updateStatus(percentage);
-				if(percentage == 100)
-					updateStatus('processing');
 			}
 		}, false);
 
