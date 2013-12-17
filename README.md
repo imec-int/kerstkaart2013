@@ -1,24 +1,6 @@
 # MiX Kerstkaart 2013
 
-## How to run
-run
-```setup.js
-```
-from the /setup folder
-
-## Idee
-* Gebruiker krijgt mail
-* Opent app/webapp
-* Wordt gevraagd om een foto te nemen (van om het even wat)
-    * +wa melige tekst rond selfies en iedereen hoort er bij en zo
-* Krijgt een mozaïkfoto te zien van 'een kerstboom'
-* Gebruiker kan inzoomen op z'n eigen foto
-
-## Research
-* [http://www.christinabergey.com/notes_code/nc.php?topic=similar_img_mosaic](http://www.christinabergey.com/notes_code/nc.php?topic=similar_img_mosaic)
-* [http://www.designamosaic.com/photo-mosaic-process](http://www.designamosaic.com/photo-mosaic-process)
-* [video about HUE vs RGB](http://www.youtube.com/watch?v=wp-fZ-2aUWo)
-
+Make sure you have ImageMagick, node.js and MongoDB installed.
 
 ## Installing ImageMagick
 * [install brew](http://brew.sh/)
@@ -34,6 +16,36 @@ montage: unable to read font `/usr/local/share/ghostscript/fonts/n019003l.pfb' @
 montage: Postscript delegate failed `/var/tmp/magick-25673Kf7Pds8Zkps9': No such file or directory @ error/ps.c/ReadPSImage/837.
 ```
 Install Ghostscript using ```brew install ghostscript```
+
+## How to run the app and its startup script(s)
+
+The pictures under ```data/raw_bootstrap_images/``` are used to populate the database with bootstrap pictures.
+
+Edit ```app/config.js``` 'till you're happy.
+
+Make sure you're running [MongoDB](http://www.mongodb.org/downloads)
+
+Run ```setup.js``` from the ```app/setup/``` folder.
+
+All files generated are store under ```app/public/mosaic``` as described in the ```config.js``` file.
+
+Run ```node app.js``` from the ```app/``` folder.
+
+## Idee
+* Gebruiker krijgt mail
+* Opent app/webapp
+* Wordt gevraagd om een foto te nemen (van om het even wat)
+    * +wa melige tekst rond selfies en iedereen hoort er bij en zo
+* Krijgt een mozaïkfoto te zien van 'een kerstboom'
+* Gebruiker kan inzoomen op z'n eigen foto
+
+## Research
+* [http://www.christinabergey.com/notes_code/nc.php?topic=similar_img_mosaic](http://www.christinabergey.com/notes_code/nc.php?topic=similar_img_mosaic)
+* [http://www.designamosaic.com/photo-mosaic-process](http://www.designamosaic.com/photo-mosaic-process)
+* [video about HUE vs RGB](http://www.youtube.com/watch?v=wp-fZ-2aUWo)
+
+
+
 
 
 ## Some ImageMagick commands
