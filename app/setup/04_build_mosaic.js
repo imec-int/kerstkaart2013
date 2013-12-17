@@ -106,8 +106,8 @@ function run (doHqVersion, mainCallback) {
 		},
 
 		function (dbconfig, $) {
-			dbconfig.latestmosaic = mosaicimage;
-			dbconfig.latestmosaichq = mosaicimagehq;
+			dbconfig.latestmosaic = mosaicimage_overlayed;
+			dbconfig.latestmosaichq = mosaicimagehq_overlayed;
 
 			mongobase.saveConfig(dbconfig, $)
 		}

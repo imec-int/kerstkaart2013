@@ -15,6 +15,14 @@ var MAX_USE_OF_SAME_PICTURE = 10; //null for unlimited
 var SOME_FOLDER_WITH_BOOTSTRAP_IMAGES = '../../data/raw_bootstrap_images/';
 
 
+// _04_build_mosaic.run(DO_HQ_VERSION, function (err, data) {
+// 	if(err) return console.log(err);
+// 	console.log(data);
+// 	console.log("DONE");
+// });
+
+// return;
+
 async.waterfall([
 	function ($) {
 		console.log('');
