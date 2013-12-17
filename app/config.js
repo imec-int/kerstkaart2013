@@ -14,8 +14,8 @@ exports.mosaic = {
 	maxtiles: 4000,    // aim at x tiles
 	aspectratio: 16/9,
 	tile:{
-		width: 20,
-		height: 20
+		width: 10,
+		height: 10
 	},
 	tilehq:{
 		width: 200,
