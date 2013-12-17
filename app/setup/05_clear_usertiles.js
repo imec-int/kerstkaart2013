@@ -48,5 +48,7 @@ function clearDB (callback) {
 	});
 }
 
+exports.run = run;
+
 
 
