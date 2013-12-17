@@ -1,4 +1,4 @@
-var im = require('imagemagick');
+var im = require('simple-imagemagick');
 var fs = require('fs');
 
 // still need to figure out what '+repage' does, but it fixes a lot of issues :p
