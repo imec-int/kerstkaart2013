@@ -1,5 +1,11 @@
 # MiX Kerstkaart 2013
 
+## How to run
+run
+```setup.js
+```
+from the /setup folder
+
 ## Idee
 * Gebruiker krijgt mail
 * Opent app/webapp

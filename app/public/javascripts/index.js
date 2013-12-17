@@ -16,6 +16,10 @@ var App = function (options){
 
 		uploadImage(event.target.files[0], function (data){
 			updateStatus(data);
+
+			$("#mosaicimage").attr('src', data.mosaicimage);
+			$("#mosaicimage_overlayed").attr('src', data.mosaicimage_overlayed);
+
 		});
 	};
 
@@ -30,6 +34,8 @@ var App = function (options){
 			if (ev.lengthComputable) {
 				var percentage = (ev.loaded / ev.total) * 100 + "%";
 				updateStatus(percentage);
+				if(percentage == 100)
+					updateStatus('processing');
 			}
 		}, false);
 
@@ -59,10 +65,12 @@ var App = function (options){
 		xhr.send(file);
 	};
 
-	updateStatus = function(statusString){
+	var updateStatus = function(statusString){
 		console.log(statusString);
 		statusEl.text(statusString);
 	};
+
+
 
 	return {
 		init: init

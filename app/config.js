@@ -6,11 +6,11 @@ exports.mosaic = {
 		main       : 'main/',
 		bootstrap  : 'bootstrap/',
 		user       : 'user/',
-		mosaic     : 'mosaic/'
+		output     : 'output/'
 	},
 	// mainimage: 'cute-baby-wallpaper1.jpg',
 	// mainimage: 'kerstboom_mix.jpg',
-	mainimage: 'MiX1.jpg',
+	mainimage: 'martijn.jpg',
 	maxtiles: 4000,    // aim at x tiles
 	aspectratio: 16/9,
 	tile:{
