@@ -1,5 +1,5 @@
 var mongojs = require('mongojs');
-var db = mongojs('kerstkaart2013', ['config', 'tiles', 'bootstraptiles']);
+var db = mongojs('kerstkaart2013', ['config', 'tiles', 'bootstraptiles', 'usertiles']);
 
 
 // config:
@@ -84,6 +84,15 @@ function getAllTiles (callback) {
 	});
 }
 
+function getAllEmptyTiles (callback) {
+	db.tiles.find({user: { $exists: false}},function (err, res) {
+		if(err) return callback(err);
+		return callback(null, res);
+	});
+}
+
+
+
 
 
 // Boostrap tiles:
@@ -114,6 +123,19 @@ function getAllBoostrapTiles (callback) {
 	});
 }
 
+
+// User tiles:
+function saveUserTile (tile, callback){
+	db.usertiles.save(tile, function (err, res) {
+		if(!callback) return;
+
+		if(err) return callback(err);
+		if(res == 1) return callback(null, tile);
+		else return callback(null, res);
+	});
+}
+
+
 exports.saveConfig = saveConfig;
 exports.getConfig = getConfig;
 
@@ -122,8 +144,11 @@ exports.saveTile = saveTile;
 exports.updateTile = updateTile;
 exports.getTile = getTile;
 exports.getAllTiles = getAllTiles;
+exports.getAllEmptyTiles = getAllEmptyTiles;
 
 exports.clearBootstrapTiles = clearBootstrapTiles;
 exports.saveBootraptile = saveBootraptile;
 exports.getAllBoostrapTiles = getAllBoostrapTiles;
+
+exports.saveUserTile = saveUserTile;
 
