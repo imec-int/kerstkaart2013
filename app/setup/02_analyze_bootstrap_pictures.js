@@ -4,10 +4,13 @@
 // ***                and adds them to the DB              ***
 // ***********************************************************
 
+// on RangeError: Maximum call stack size exceeded ==> node --stack-size=1000 02_analyze_bootstrap_pictures.js
+
 var fs = require('fs');
 var path = require('path');
 var async = require('async');
 var printf = require('printf');
+var util = require('../util');
 var config = require('../config');
 var image = require('../image');
 var mongobase = require('../mongobase');
@@ -23,7 +26,8 @@ var sourcefolder = path.join(ROOTDIR, config.mosaic.folders.bootstrap);
 fs.readdir(sourcefolder, function (err, files) {
 	if(err) return console.log(err);
 
-	async.eachLimit(files, 10, function (file, $){
+
+	async.forEachLimit(files, 10, function (file, $){
 		var absoluteFile = path.join( sourcefolder, file );
 		if(file.match(/tile_/)) return $(); // the tiles are the ones that are scaled to 20x20
 		if(!file.match(/.jpg$|.png$/)) return $(); // only allow those file extensions
@@ -31,29 +35,23 @@ fs.readdir(sourcefolder, function (err, files) {
 		var outputfile = path.join( config.mosaic.folders.bootstrap, 'tile_' + file ); // just prepend it with 'tile_'
 		var outputfilehq = path.join( config.mosaic.folders.bootstrap, 'tile_hq_' + file);
 
-		console.log( outputfile );
-
-		image.crop(absoluteFile, config.mosaic.tile.width, config.mosaic.tile.height, path.join(ROOTDIR, outputfile), function (err, res){
+		util.cropAndAverageColor(absoluteFile, path.join(ROOTDIR, outputfile), path.join(ROOTDIR, outputfilehq), function (err, averageColor){
 			if(err) return $(err);
 
-			// now get the average color for it:
-			getAverageColor(path.join(ROOTDIR, outputfile), function (err, averageColor){
+			// save bootstrap tile:
+			var bootstraptile = {
+				tile: outputfile,
+				tilehq: outputfilehq,
+				hsb: averageColor.hsb,
+				rgb: averageColor.rgb
+			};
+
+			mongobase.saveBootraptile( bootstraptile, function (err, res) {
 				if(err) return $(err);
 
-				// crop to hq-size:
-				image.crop(absoluteFile, config.mosaic.tilehq.width, config.mosaic.tilehq.height, path.join(ROOTDIR, outputfilehq), function (err, res){
-					if(err) return $(err);
+				console.log( outputfile );
 
-					var boostraptile = {
-						tile: outputfile,
-						tilehq: outputfilehq, // hq = high quality
-						hsb: averageColor.hsb,
-						rgb: averageColor.rgb
-					};
-
-					mongobase.saveBootraptile( boostraptile, $ );
-
-				});
+				return $();
 			});
 		});
 	}, function (err){
@@ -63,18 +61,4 @@ fs.readdir(sourcefolder, function (err, files) {
 });
 
 
-function getAverageColor(filename, callback){
-	var res = {};
 
-	image.getAverageRGBColor(filename, function (err, rgb){
-		if(err) return callback(err);
-		res.rgb = rgb;
-
-		image.getAverageHSBColor(filename, function (err, hsb){
-			if(err) return callback(err);
-			res.hsb = hsb;
-
-			return callback(null, res);
-		});
-	});
-}

@@ -8,7 +8,9 @@ exports.mosaic = {
 		user       : 'user/',
 		mosaic     : 'mosaic/'
 	},
-	mainimage: 'cute-baby-wallpaper1.jpg',
+	// mainimage: 'cute-baby-wallpaper1.jpg',
+	// mainimage: 'kerstboom_mix.jpg',
+	mainimage: 'MiX1.jpg',
 	maxtiles: 4000,    // aim at x tiles
 	aspectratio: 16/9,
 	tile:{

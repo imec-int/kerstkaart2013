@@ -1,7 +1,67 @@
 var App = function (options){
 
+	var fileuploadEl = $("#files");
+	var statusEl = $("#result")
+
 	var init = function (){
-		console.log("init")
+		updateStatus("init");
+
+		fileuploadEl.bind('change', onFileuploadChange);
+	};
+
+	var onFileuploadChange = function (event){
+		console.log("file selected");
+
+		updateStatus("processing...");
+
+		uploadImage(event.target.files[0], function (data){
+			updateStatus(data);
+		});
+	};
+
+	var uploadImage = function(file, callback){
+		updateStatus("uploading file");
+		console.log(file);
+
+		var xhr = new XMLHttpRequest(),
+			upload = xhr.upload;
+
+		upload.addEventListener("progress", function (ev) {
+			if (ev.lengthComputable) {
+				var percentage = (ev.loaded / ev.total) * 100 + "%";
+				updateStatus(percentage);
+			}
+		}, false);
+
+		upload.addEventListener("load", function (ev) {
+			console.log("upload complete");
+		}, false);
+
+		upload.addEventListener("error", function (ev) {
+			console.log(ev);
+		}, false);
+
+		xhr.open(
+			"POST",
+			"/upload"
+		);
+		xhr.setRequestHeader("Cache-Control", "no-cache");
+		xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+		xhr.setRequestHeader("Content-Type", file.type);
+		xhr.setRequestHeader("X-File-Name", file.name);
+
+		xhr.onreadystatechange = function() {
+			if (xhr.readyState == 4) {
+				callback( JSON.parse(xhr.responseText) );
+			}
+		}
+
+		xhr.send(file);
+	};
+
+	updateStatus = function(statusString){
+		console.log(statusString);
+		statusEl.text(statusString);
 	};
 
 	return {

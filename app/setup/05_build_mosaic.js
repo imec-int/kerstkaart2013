@@ -20,7 +20,7 @@ var tilesWide, tilesHeigh, mainimage, mainimagehq, mosaicimage, mosaicimage_over
 var inputfiles, inputfilesHQ;
 
 
-var now = Date.now();
+var now = Math.round( Date.now()/1000 );
 mosaicimage = path.join(config.mosaic.folders.mosaic, 'mosaic_'+now+'.jpg');
 mosaicimage_overlayed = path.join(config.mosaic.folders.mosaic, 'mosaic_'+now+'_overlayed.jpg');
 
@@ -82,7 +82,7 @@ async.waterfall([
 	},
 
 	function (res, $) {
-		if(!DO_HQ_VERSION) return $();
+		if(!DO_HQ_VERSION) return $(null, null);
 
 		// stitch the hq version:
 		console.log("> stitching HQ mosaic");
@@ -90,7 +90,7 @@ async.waterfall([
 	},
 
 	function (res, $) {
-		if(!DO_HQ_VERSION) return $();
+		if(!DO_HQ_VERSION) return $(null, null);
 
 		// overlay stitched image hq with original hq:
 		console.log("> overlaying HQ mosaic");
