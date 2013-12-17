@@ -91,6 +91,15 @@ function getAllEmptyTiles (callback) {
 	});
 }
 
+function getAllTilesContainingUserTiles (callback) {
+	db.tiles.find({user: { $exists: true}},function (err, res) {
+		if(err) return callback(err);
+		return callback(null, res);
+	});
+}
+
+
+
 
 
 
@@ -145,6 +154,7 @@ exports.updateTile = updateTile;
 exports.getTile = getTile;
 exports.getAllTiles = getAllTiles;
 exports.getAllEmptyTiles = getAllEmptyTiles;
+exports.getAllTilesContainingUserTiles = getAllTilesContainingUserTiles;
 
 exports.clearBootstrapTiles = clearBootstrapTiles;
 exports.saveBootraptile = saveBootraptile;

@@ -1,6 +1,7 @@
 var async = require('async');
 var config = require('./config');
 var image = require('./image');
+var mongobase = require('./mongobase');
 
 function cropAndAverageColor (inputfile, outputfile, outputfilehq, callback) {
 	var averageColor = {};
@@ -78,9 +79,26 @@ function findClosestTile(tiles, maxNrOfUseOfSameTile, hsb, rgb){
 }
 
 
+function getXY (tileIndex, callback) {
+	// body...
+	mongobase.getConfig(function (err, config){
+		if(err) return callback(err);
+
+		var x = tileIndex%config.tilesWide;
+		var y = (tileIndex-x)/config.tilesWide;
+
+		return callback(null, {
+			x: x,
+			y: y
+		});
+	});
+}
+
+
 
 exports.cropAndAverageColor = cropAndAverageColor;
 exports.findClosestTile = findClosestTile;
+exports.getXY = getXY;
 
 
 

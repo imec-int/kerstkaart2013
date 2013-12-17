@@ -72,14 +72,19 @@ app.post('/upload', function (req, res){
 			renderMosaic(function (err, mosaic) {
 				if(err) return sendError(err, res);
 
-				var data = {
-					mosaicimage           : mosaic.mosaicimage,
-					mosaicimage_overlayed : mosaic.mosaicimage_overlayed,
-					tile                  : tile
-				};
+				util.getXY(tile.index, function (err, xy){
+					if(err) return sendError(err, res);
 
-				res.json(data);
-			})
+					var data = {
+						mosaicimage           : mosaic.mosaicimage,
+						mosaicimage_overlayed : mosaic.mosaicimage_overlayed,
+						tile                  : tile,
+						xy                    : xy
+					};
+
+					res.json(data);
+				});
+			});
 		});
 	});
 
