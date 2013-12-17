@@ -100,6 +100,18 @@ function run (doHqVersion, mainCallback) {
 			$);
 		},
 
+		function (imageRes, $) {
+			// save mosaic image reference to db:
+			mongobase.getConfig($);
+		},
+
+		function (dbconfig, $) {
+			dbconfig.latestmosaic = mosaicimage;
+			dbconfig.latestmosaichq = mosaicimagehq;
+
+			mongobase.saveConfig(dbconfig, $)
+		}
+
 	], mainCallback);
 }
 
