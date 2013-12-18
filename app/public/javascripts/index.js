@@ -42,7 +42,7 @@ var App = function (options){
 
 		xhr.open(
 			"POST",
-			"/upload"
+			"/xhrupload"
 		);
 		xhr.setRequestHeader("Cache-Control", "no-cache");
 		xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");

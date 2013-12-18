@@ -3,6 +3,19 @@ var fs = require('fs');
 
 // still need to figure out what '+repage' does, but it fixes a lot of issues :p
 
+// orientates the image correctly
+function autoOrient (inputfile, outputfile, callback) {
+	im.convert([
+		inputfile,
+		'+repage'     ,
+		'-auto-orient',
+		outputfile
+	], function (err, data){
+		if (err) return callback(err);
+		return callback(null, data);
+	});
+}
+
 function crop (inputfile, width, heigth, outputfile, callback) {
 	im.convert([
 		inputfile,
@@ -78,6 +91,23 @@ function getAverageHSBColor(file, callback){
 	});
 }
 
+
+function getAverageColor(file, callback){
+	var res = {};
+
+	getAverageRGBColor(file, function (err, rgb){
+		if(err) return callback(err);
+		res.rgb = rgb;
+
+		getAverageHSBColor(file, function (err, hsb){
+			if(err) return callback(err);
+			res.hsb = hsb;
+
+			return callback(null, res);
+		});
+	});
+}
+
 function createSolidImage(size, rgb, outputfile, callback){
 	im.convert([
 		'+repage'     ,
@@ -129,8 +159,6 @@ function overlayImages (inputimage1, inputimage2, outputfile, callback){
 		inputimage2,
 		outputfile
 	], function (err, data){
-		if(!callback) return;
-
 		if (err) return callback(err);
 		return callback(null, data);
 	});
@@ -138,10 +166,12 @@ function overlayImages (inputimage1, inputimage2, outputfile, callback){
 
 }
 
+exports.autoOrient = autoOrient;
 exports.crop = crop;
 exports.slice = slice;
 exports.getAverageRGBColor = getAverageRGBColor;
 exports.getAverageHSBColor = getAverageHSBColor;
+exports.getAverageColor = getAverageColor;
 exports.createSolidImage = createSolidImage;
 exports.modulate = modulate;
 exports.stitchImages = stitchImages;

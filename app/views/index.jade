@@ -1,7 +1,7 @@
 !!! 5
 html
 	head
-		meta(name='viewport', content='initial-scale=1.0, user-scalable=no')
+		//- meta(name='viewport', content='initial-scale=1.0, user-scalable=no')
 		title= title
 		link(href='http://fonts.googleapis.com/css?family=Alegreya+SC:400,700,400italic,700italic,900,900italic', rel='stylesheet', type='text/css')
 		link(rel='stylesheet', href="/stylesheets/style.css")
@@ -11,9 +11,9 @@ html
 
 	body
 		.christmassy Merry Muffler and a Happy New Gear!
-		input#files.btn.btn-primary(type="file", name="files[]", accept="image/*", capture="camera")
+		input#files.btn.btn-primary(type="file", name="files[]", accept="image/*;capture=camera", capture="camera")
 		#result
 		br
-		img#mosaicimage(src="#{mosaicimage}")
+		img#mosaicimage
 
 

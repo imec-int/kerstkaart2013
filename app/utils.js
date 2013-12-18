@@ -5,6 +5,36 @@ var config = require('./config');
 var image = require('./image');
 var mongobase = require('./mongobase');
 
+
+function removeFileExt (filename) {
+	return path.join( path.dirname(filename), path.basename(filename, path.extname(filename)))
+}
+
+function getTilesInfo () {
+	// proposed dimensions for mosaic, based on aspect ratio and number of wanted tiles
+	var tilesHeigh = Math.round( Math.sqrt(config.mosaic.maxtiles/(config.mosaic.aspectratio)) );
+	var tilesWide = Math.round( config.mosaic.maxtiles / tilesHeigh );
+
+	// width and height the image should be, based on the number of tiles and tile size:
+	var width = tilesWide * config.mosaic.tile.width;
+	var height = tilesHeigh * config.mosaic.tile.height;
+
+	// width and height the HQ image should be, based on the number of tiles and tile size:
+	var widthHQ = tilesWide * config.mosaic.tilehq.width;
+	var heightHQ = tilesHeigh * config.mosaic.tilehq.height;
+
+	return {
+		heigh   : tilesHeigh,
+		wide    : tilesWide,
+		total   : tilesWide * tilesHeigh,
+		width   : width,
+		height  : height,
+		widthHQ : width,
+		heightHQ: height
+	};
+}
+
+
 function cropAndAverageColor (inputfile, outputfile, outputfilehq, callback) {
 	var averageColor = {};
 
@@ -45,7 +75,7 @@ function cropAndAverageColor (inputfile, outputfile, outputfilehq, callback) {
 }
 
 
-function findClosestTile(tiles, maxNrOfUseOfSameTile, hsb, rgb){
+function findClosestTile(tiles, maxNrOfUseOfSameTile, hsb){
 	var closestTile = null;
 	var smallestDifference;
 
@@ -73,11 +103,12 @@ function findClosestTile(tiles, maxNrOfUseOfSameTile, hsb, rgb){
 		}
 	};
 
-	console.log("> " + (closestTile.tile || closestTile.main) + " - smallestDifference: " + smallestDifference);
-
 	closestTile.use++;
 
-	return closestTile;
+	return {
+		closestTile: closestTile,
+		smallestDifference: smallestDifference
+	};
 }
 
 
@@ -108,11 +139,37 @@ function cleanFolder (folder, callback) {
 	});
 }
 
+function wwwdfy (path) {
+	var match = path.match(/public(\/.+)/);
+	if(match && match[1]) return match[1];
+	return path;
+}
 
+/**
+ * Handig om meteen errors naar de client te sturen en ook te loggen
+ */
+function sendError(err, webresponse){
+	var o = {
+		err: err.toString()
+	};
+	console.log(err);
+
+	if(err.stack){
+		console.log(err.stack);
+		o.errstack = err.stack;
+	}
+
+	webresponse.json(o);
+}
+
+exports.getTilesInfo = getTilesInfo;
+exports.removeFileExt = removeFileExt;
 exports.cropAndAverageColor = cropAndAverageColor;
 exports.findClosestTile = findClosestTile;
 exports.getXY = getXY;
 exports.cleanFolder = cleanFolder;
+exports.wwwdfy = wwwdfy;
+exports.sendError = sendError;
 
 
 
