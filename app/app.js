@@ -72,7 +72,6 @@ app.post('/xhrupload', function (req, res){
 	});
 });
 
-
 function renderMosaic (userimage, req, res) {
 	// this function has 2 callbacks, one with the normal(lowres) version of the mosaic and one with the highres version of the mosaic
 	// mosaic.renderMosaic( userimage, callback(err, mosaicimage), callbackHQ(err, mosaicimageHQ) )
@@ -95,7 +94,6 @@ function renderMosaic (userimage, req, res) {
 	);
 }
 
-
 // YOUNES stuff:
 
 app.get('/share', function(req, res){
@@ -103,6 +101,6 @@ app.get('/share', function(req, res){
 		title     	: 'Share Your MiX Kerstkaart 2013',
 		message 	: 'iwasmixed - We wish you amazing holydays.',
 		imgUrl		: 'http://d3j5vwomefv46c.cloudfront.net/photos/large/828376205.jpg',
-		pageUrl		: 'rrrrr http://twitpic.com/dp6z65'
+		pageUrl		: 'http://twitpic.com/dp6z65'
 	});
 });
