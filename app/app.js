@@ -41,20 +41,21 @@ http.createServer(app).listen(app.get('port'), function(){
 
 app.get('/', function(req, res){
 	res.render('index', {
-		title: '| MiX Kerstkaart 2013'
+		title: '| MiX Kerstkaart 2013',
+		fancybg: true
 	});
 });
 
-app.get('/nocss3', function(req, res){
-	res.render('nocss3', {
-		title: '| MiX Kerstkaart 2013'
+app.get('/simple', function(req, res){
+	res.render('index', {
+		title: '| MiX Kerstkaart 2013',
+		fancybg: false
 	});
 });
 
-
-app.get('/test', function(req, res){
-	res.render('test', {
-		title: '| MiX Kerstkaart 2013'
+app.get('/fancybg', function(req, res){
+	res.render('fancybg', {
+		title: 'background | MiX Kerstkaart 2013'
 	});
 });
 

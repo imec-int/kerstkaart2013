@@ -2459,7 +2459,7 @@ C("app", "require exports module 0/4 0/c 0/2 0/9 0/e 0/f 0/1 0/5 0/7 0/6 0/g 1/i
         G = p
     }
     if (!("WebKitCSSMatrix" in window) || !("m11" in new WebKitCSSMatrix))
-        window.location.pathname = "/nocss3";
+        window.location.pathname = "/simple";
     else {
         document.title = "MiX kerstkaart 2013";
         var A = "Common" in window && "API" in Common, G = w, P = c("0/4"), E = c("0/c"), Eb = c("0/2"), m = c("0/9"), u = c("0/e"), Fb = c("0/f"), ja = c("0/1"), Pa = c("0/5"), Gb = c("0/7"), ua = c("0/6"), ra = c("0/g"), Hb = c("1/i");
