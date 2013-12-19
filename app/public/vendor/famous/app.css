@@ -1,20 +1,19 @@
 body {
-    background-image: url('../content/bg.jpg');
+    background-image: url('/images/mix_bg2.png');
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center center;
 }
 
 .periodic-item {
-    background-image: url('../content/panel-item-ticks-hq.png');
-    background-repeat: no-repeat;
+    1background-repeat: no-repeat;
     background-size: 100% 100%;
     width: 120px;
     height: 160px;
 	-webkit-border-radius: 3px;
 	border-radius: 3px;
-	-webkit-box-shadow: 0 0 12px rgba(231,254,237,0.6); 
-	box-shadow: 0 0 12px rgba(231,254,237,0.6); 
+	-webkit-box-shadow: 0 0 12px rgba(231,254,237,0.6);
+	box-shadow: 0 0 12px rgba(231,254,237,0.6);
     color: rgba(240,240,240,0.8);
     text-align: center;
     -webkit-backface-visibility: visible;
@@ -22,15 +21,14 @@ body {
 }
 
 .periodic-item-hq {
-    background-image: url('../content/panel-item-ticks-hq.png');
-    background-repeat: no-repeat;
+    1background-repeat: no-repeat;
     background-size: 100% 100%;
     width: 360px;
     height: 480px;
 	-webkit-border-radius: 9px;
-	-webkit-box-shadow: 0 0 36px rgba(231,254,237,0.6); 
+	-webkit-box-shadow: 0 0 36px rgba(231,254,237,0.6);
 	border-radius: 9px;
-	box-shadow: 0 0 36px rgba(231,254,237,0.6); 
+	box-shadow: 0 0 36px rgba(231,254,237,0.6);
     color: rgba(240,240,240,0.8);
     text-align: center;
     -webkit-backface-visibility: hidden;
@@ -43,63 +41,27 @@ body {
     padding: 60px 60px;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
-    overflow: hidden; 
-}
-
-.periodic-item .number {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    text-align: right;
-    font-size: 12px;
-    font-weight: bold;
-    text-shadow: 0 0 2.4px #3cf;
-}
-
-.periodic-item-hq .number {
-    position: absolute;
-    top: 62px;
-    right: 60px;
-    text-align: right;
-    font-size: 36px;
-    font-weight: bold;
-    text-shadow: 0 0 7.2px #3cf;
-}
-
-.periodic-item .symbol {
-    top: 40px;
-    left: 0px;
-    right: 0px;
-    position: absolute;
-    font-size: 60px;
-    font-weight: bold;
-    text-shadow: 0 0 10px #3cf;
-}
-
-.periodic-item-hq .symbol {
-    position: absolute;
-    top: 122px;
-    left: 0px;
-    right: 0px;
-    font-size: 180px;
-    font-weight: bold;
-    text-shadow: 0 0 30px #3cf;
+    overflow: hidden;
 }
 
 .periodic-item .name {
     position: absolute;
-    bottom: 30px;
+    bottom: 4px;
     left: 0px;
     right: 0px;
     font-size: 12px;
+    font-weight: bold;
+    color: #fff;
+    background-color: rgba(120, 125, 115, 0.7);
 }
 
 .periodic-item-hq .name {
     position: absolute;
-    bottom: 90px;
+    bottom: 10px;
     left: 0px;
     right: 0px;
     font-size: 36px;
+    font-weight: bold;
 }
 
 .periodic-item .mass {
@@ -132,7 +94,6 @@ body {
 .play-button {
     width: 200px;
     height: 200px;
-    background-image: url('../content/play-button.png');
     background-repeat: no-repeat;
     background-position: center center;
     cursor: pointer;
@@ -240,7 +201,7 @@ body {
     background: -moz-linear-gradient(#34BFF3,#074AA2);
     background: -o-linear-gradient(#34BFF3,#074AA2);
     background: -ms-linear-gradient(#34BFF3,#074AA2);
-    background: linear-gradient(#34BFF3,#074AA2);   
+    background: linear-gradient(#34BFF3,#074AA2);
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1e5799', endColorstr='#7db9e8',GradientType=0 ); /* IE6-9 */
     -webkit-user-select: none;
 }
@@ -255,27 +216,41 @@ body {
 }
 
 .signup-box {
-    background-color: rgba(23,152,202,0.7);
+    background-color: rgba(52, 56, 63, 0.88);
     border: 3px solid #fff;
-    padding: 30px 60px;
+    padding: 30px 50px;
     border-radius: 10px;
     color: #fff;
     font-size: 20px;
-    line-height: 20px;
-    -webkit-box-shadow: 0 0 20px #3cf;
-    box-shadow: 0 0 20px #3cf;
+    line-height: 40px;
+    -webkit-box-shadow: 0 0 20px #F1D6DC;
+    box-shadow: 0 0 20px #F1D6DC;
     text-align: center;
 }
 
 .signup-box h3 {
     font-size: 45px;
     font-weight: normal;
-    margin: 15px; 
+    margin: 10px;
 }
 
 .signup-box .sub {
     font-size: 13px;
     font-style: italic;
+}
+
+.centralImg{
+    background-image: url("/images/martijn.jpg");
+    height: 200px;
+    width: 400px;
+    background-size: contain;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#video{
+    height: 200px;
+    width: 400px;
 }
 
 .signup-box p {
@@ -301,6 +276,7 @@ body {
 .signup-hide img {
     width: 15px;
     height: 15px;
+    display: none;
 }
 
 .signup-show {
@@ -310,7 +286,7 @@ body {
     text-align: center;
     cursor: pointer;
     color: #fff;
-    background-color: rgba(23,152,202,0.7);
+    background-color: rgba(52, 56, 63, 0.88);
     border-radius: 3px 3px 0px 0px;
     border-top: 1px solid #fff;
     border-left: 1px solid #fff;
@@ -350,21 +326,68 @@ body {
     background-color: #fff;
     border: none;
     -webkit-box-shadow: inset 0 0 3px #000;
-    box-shadow: inset 0 0 3px #000; 
+    box-shadow: inset 0 0 3px #000;
 }
 .signup input[type=text].half  {
     width: 190px;
 }
 
+#cameraBtn{
+    background-image: url("/images/cam.png");
+}
+
+.camLabel{
+    width:160px;
+    height:130px;
+    display: inline-block;
+    overflow:hidden;
+    position:relative;
+    cursor: pointer;
+    _cursor: hand;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 50px;
+    -webkit-box-shadow: inset 0 0 3px #60cbfa, 0 0 50px rgb(50,200,255, 0.5);
+    box-shadow: inset 0 0 3px #60cbfa, 0 0 50px rgb(50,200,255, 0.5);
+    text-shadow: 0 -1px rgba(0,0,0,0.5);
+    border-color: #34BFF3 rgba(0,0,0,0.05) #003C8B;
+    background: #D8DFE2;
+    border-radius: 15px;
+    font-size: 16px;
+}
+
+.camLabel img{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+label span input {
+    z-index: 999;
+    line-height: 0;
+    font-size: 50px;
+    position: absolute;
+    top: -2px;
+    left: -700px;
+    opacity: 0;
+    filter: alpha(opacity = 0);
+    -ms-filter: "alpha(opacity=0)";
+    cursor: pointer;
+    _cursor: hand;
+    margin: 0;
+    padding:0;
+}
+
 .signup input[type=submit] {
     width: 410px;
-    height: 30px;
+    height: 100px;
     clear: both;
     float: left;
     color: #fff;
+    font-size: 36px;
     padding: 4px;
-    margin-left: 115px;
-    margin-top: 5px;
+    margin-left: 80px;
+    margin-top: 50px;
     -webkit-box-shadow: inset 0 0 3px #60cbfa, 0 0 50px rgb(50,200,255, 0.5);
     box-shadow: inset 0 0 3px #60cbfa, 0 0 50px rgb(50,200,255, 0.5);
     text-shadow: 0 -1px rgba(0,0,0,0.5);
@@ -375,31 +398,11 @@ body {
     background: -moz-linear-gradient(#34BFF3,#074AA2);
     background: -o-linear-gradient(#34BFF3,#074AA2);
     background: -ms-linear-gradient(#34BFF3,#074AA2);
-    background: linear-gradient(#34BFF3,#074AA2);   
+    background: linear-gradient(#34BFF3,#074AA2);
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1e5799', endColorstr='#7db9e8',GradientType=0 ); /* IE6-9 */
     cursor: pointer;
 }
 
-.signup .tweet-button {
-    text-align: center;
-}
-
-.signup .tweet-button a {
-    display: inline-block;
-    padding: 0 7px 0 28px;
-    background: url('https://twitter.com/favicons/favicon.ico') 7px center no-repeat, -webkit-linear-gradient(top, #fff, #dedede);
-    background: url('https://twitter.com/favicons/favicon.ico') 7px center no-repeat, -moz-linear-gradient(top, #fff, #dedede);
-    border: 1px solid #ccc;
-    border-radius: 3px;
-    color: #333;
-    font-family: 'Helvetica Neue', Arial, sans-serif;
-    font-size: 13px;
-    height: 26px;
-    font-weight: bold;
-    text-decoration: none;
-    text-shadow: rgba(255, 255, 255, 0.5) 0px 1px 0px;
-    line-height: 26px;
-}
 
 .signup-error {
     color: #fc0;
@@ -407,9 +410,7 @@ body {
     text-align: center;
 }
 
-.jobs-button {
-    text-align: right;
-}
+
 
 a, a:visited {
     color: #fff;
@@ -417,7 +418,7 @@ a, a:visited {
 }
 
 #overlay {
-    background-image: -webkit-radial-gradient(rgba(0,0,0,0), rgba(0,0,0,0.5));
+    /*background-image: -webkit-radial-gradient(rgba(0,0,0,0), rgba(0,0,0,0.5));*/
     -webkit-transform: translateZ(999px);
     -webkit-perspective: 0px;
     perspective: 0px;
