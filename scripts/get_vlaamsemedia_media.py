@@ -14,10 +14,7 @@ def oauth_login():
     # CONSUMER_SECRET = ''
     # OAUTH_TOKEN = ''
     # OAUTH_TOKEN_SECRET = ''
-    CONSUMER_KEY = 'mYjqkOYDyd651pATZrl9w'
-    CONSUMER_SECRET = '62iVAjZfDarsg4VVuFYhvxfZXryH7WMB0UsWyLiIEwM'
-    OAUTH_TOKEN = '1731841-yomMv1zyXMyxBQ5hix4svSZQmY0jfIE3cDvTz0zDko'
-    OAUTH_TOKEN_SECRET = 'RCFAuJMlBWVez2DKXufFGaavAvryQN0w5uTwlp2pKELUr'
+   
 
     auth = twitter.oauth.OAuth(OAUTH_TOKEN, OAUTH_TOKEN_SECRET,
                                CONSUMER_KEY, CONSUMER_SECRET)
