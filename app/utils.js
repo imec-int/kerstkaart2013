@@ -118,8 +118,6 @@ function copyFile(source, target, cb) {
 
 exports.getTilesInfo = getTilesInfo;
 exports.removeFileExt = removeFileExt;
-exports.cropAndAverageColor = cropAndAverageColor;
-exports.findClosestTile = findClosestTile;
 exports.getXY = getXY;
 exports.cleanFolder = cleanFolder;
 exports.wwwdfy = wwwdfy;
