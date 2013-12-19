@@ -14,6 +14,7 @@ with open('media_urls.txt','r') as f:
             shortname = m + '.png'
         else:
         	print 'no jpg nor png'
+        	continue
 
         print shortname
         with open(shortname, 'wb') as imgfile:
