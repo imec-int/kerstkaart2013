@@ -9,7 +9,7 @@ var utils = require('../utils');
 
 
 
-var SOME_FOLDER_WITH_IMAGES = '../../data/raw_bootstrap_images/';
+var SOME_FOLDER_WITH_IMAGES = '../raw_images/';
 
 
 
@@ -51,11 +51,30 @@ async.waterfall([
 			var filename = path.basename(image);
 			var basenameNoExt = path.basename(image, path.extname(image));
 
-			var outputfile = path.join( config.mosaic.folders.tiles, 'tile_' + basenameNoExt + '.jpg' );
-			var outputfilehq = path.join( config.mosaic.folders.tiles, 'tile_hq_' + basenameNoExt + '.jpg' );
+			var hasTitle = true;
+			if(filename.substr(0,1) == '_')
+				hasTitle = false;
 
-			console.log('> cropping image to tile: ' + filename);
-			cropAndAverageColor(image, path.join(ROOTDIR, outputfile), path.join(ROOTDIR, outputfilehq), function (err, averageColor){
+			var newBasenameNoExt = basenameNoExt;
+			if(hasTitle){
+				// clean up name:
+				newBasenameNoExt = utils.cleanName(basenameNoExt);
+			}
+
+			var outputfile = path.join( config.mosaic.folders.tiles, 'tile_' + newBasenameNoExt + '.jpg' );
+			var outputfilehq = path.join( config.mosaic.folders.tiles, 'hq_tile_' + newBasenameNoExt + '.jpg' );
+
+			var outputfileflying = null;
+			var outputfileflyingAbsolute = null;
+
+			if(hasTitle)
+				outputfileflying = path.join( config.mosaic.folders.tiles, 'flying_tile_' + newBasenameNoExt + '.jpg' );
+
+			if(outputfileflying)
+				outputfileflyingAbsolute = path.join(ROOTDIR, outputfileflying)
+
+			console.log('> cropping and analyzing: ' + outputfile);
+			cropAndAverageColor(image, path.join(ROOTDIR, outputfile), path.join(ROOTDIR, outputfilehq), outputfileflyingAbsolute, function (err, averageColor){
 				if(err) return $for(err);
 
 				// save tile:
@@ -65,6 +84,11 @@ async.waterfall([
 					hsb: averageColor.hsb,
 					rgb: averageColor.rgb
 				};
+
+				if(hasTitle){
+					tile.title      = basenameNoExt.replace(/(.+)\s_\d/, '$1'); //removes ending underscore with digit
+					tile.tileflying = outputfileflying;
+				}
 
 				mongobase.saveTile( tile, function (err, res) {
 					if(err) return $for(err);
@@ -82,7 +106,7 @@ async.waterfall([
 
 
 
-function cropAndAverageColor (inputfile, outputfile, outputfilehq, callback) {
+function cropAndAverageColor (inputfile, outputfile, outputfilehq, outputfileflying, callback) {
 	var averageColor = {};
 
 	async.waterfall([
@@ -97,15 +121,23 @@ function cropAndAverageColor (inputfile, outputfile, outputfilehq, callback) {
 		},
 
 		function (imageres, $) {
+			if(!outputfileflying) return $(null, null);
+
+			// crop to flying tile size:
+			image.crop(inputfile, config.mosaic.flyingtile.width, config.mosaic.flyingtile.height, outputfileflying, $);
+		},
+
+		function (imageres, $) {
+
 			// now get the average RGB color for it:
-			image.getAverageRGBColor(inputfile, $);
+			image.getAverageRGBColor(outputfile, $);
 		},
 
 		function (rgb, $) {
 			averageColor.rgb = rgb;
 
 			// now get the average RGB color for it:
-			image.getAverageHSBColor(inputfile, $);
+			image.getAverageHSBColor(outputfile, $);
 		},
 
 		function (hsb, $) {

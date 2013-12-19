@@ -116,13 +116,21 @@ function copyFile(source, target, cb) {
 	rd.pipe(wr);
 }
 
+var cleanName = function(name) {
+	name = name.toLowerCase();
+    name = name.replace(/\s+/gi, '_'); // Replace white space with _
+    return name.replace(/[^a-zA-Z0-9\_]/gi, ''); // Strip any special charactere
+}
+
 exports.getTilesInfo = getTilesInfo;
 exports.removeFileExt = removeFileExt;
+
 exports.getXY = getXY;
 exports.cleanFolder = cleanFolder;
 exports.wwwdfy = wwwdfy;
 exports.sendError = sendError;
 exports.copyFile = copyFile;
+exports.cleanName = cleanName;
 
 
 
