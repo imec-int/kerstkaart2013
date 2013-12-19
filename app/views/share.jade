@@ -15,19 +15,19 @@ html
 
 		.share
 			//-   GOOGLE PLUS
-			a(href='https://plus.google.com/share?url=' + '#{imgUrl}')
+			a(href='https://plus.google.com/share?url=#{imgUrl}')
 				img(src='/images/social/g+-ball-64.png')
 
 			//- TWITTER
-			a(href='http://twitter.com/home?status=' + '#{message} ' + ' #{imgUrl}')
+			a(href='http://twitter.com/home?status=#{message}#{imgUrl}')
 				img(src='/images/social/twitter-ball-64.png')
 
 			//-   FACEBOOK
-			a(href='http://www.facebook.com/sharer/sharer.php?s=100&p[url]=' + '#{pageUrl}' + '&p[images][0]=' + '#{imgUrl}' + '&p[title]=#{title}')
+			a(href='http://www.facebook.com/sharer/sharer.php?s=100&p[url]=#{pageUrl}&p[images][0]=#{imgUrl}&p[title]=#{title}')
 				img(src='/images/social/fb-ball-64.png')
 
 			//-   LINKEDIN
-			a(href='http://www.linkedin.com/shareArticle?mini=true&url=' + '#{imgUrl}' + '&title=#{title}')
+			a(href='http://www.linkedin.com/shareArticle?mini=true&url=#{imgUrl}&title=#{title}')
 				img(src='/images/social/linkedin-ball-64.png')
 
 			//- PINTEREST
