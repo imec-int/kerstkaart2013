@@ -55,7 +55,7 @@ async.waterfall([
 			var outputfilehq = path.join( config.mosaic.folders.tiles, 'tile_hq_' + basenameNoExt + '.jpg' );
 
 			console.log('> cropping image to tile: ' + filename);
-			utils.cropAndAverageColor(image, path.join(ROOTDIR, outputfile), path.join(ROOTDIR, outputfilehq), function (err, averageColor){
+			cropAndAverageColor(image, path.join(ROOTDIR, outputfile), path.join(ROOTDIR, outputfilehq), function (err, averageColor){
 				if(err) return $for(err);
 
 				// save tile:
@@ -79,3 +79,44 @@ async.waterfall([
 	if(err) return console.log(err);
 	return console.log("> DONE, you can CTRL-C this");
 });
+
+
+
+function cropAndAverageColor (inputfile, outputfile, outputfilehq, callback) {
+	var averageColor = {};
+
+	async.waterfall([
+		function ($) {
+			// crop to tile size:
+			image.crop(inputfile, config.mosaic.tile.width, config.mosaic.tile.height, outputfile, $);
+		},
+
+		function (imageres, $) {
+			// crop to tile hq size:
+			image.crop(inputfile, config.mosaic.tilehq.width, config.mosaic.tilehq.height, outputfilehq, $);
+		},
+
+		function (imageres, $) {
+			// now get the average RGB color for it:
+			image.getAverageRGBColor(inputfile, $);
+		},
+
+		function (rgb, $) {
+			averageColor.rgb = rgb;
+
+			// now get the average RGB color for it:
+			image.getAverageHSBColor(inputfile, $);
+		},
+
+		function (hsb, $) {
+			averageColor.hsb = hsb;
+
+			$();
+		}
+
+	], function (err) {
+		if(err) return callback(err);
+		return callback(null, averageColor);
+	});
+
+}

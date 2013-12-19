@@ -252,7 +252,7 @@ function matchTiles (usertiles, callback) {
 
 		var L = usertiles.length;
 		for (var i = 0; i < L; i++) {
-			var o = utils.findClosestTile(tiles, maxUseOfSameTile, usertiles[i].hsb);
+			var o = findClosestTile(tiles, maxUseOfSameTile, usertiles[i].hsb);
 
 			// console.log("> " + tiles[i].temptilefile + " - smallestDifference: " + o.smallestDifference);
 
@@ -344,7 +344,6 @@ function stitchMosaic2 (mainimage, usertiles, fileParameter, tempfolder, callbac
 
 		function ($) {
 			var inputfiles = path.join( tempfolder,  destinationFileString + '[0-' + (tilesinfo.total-1) + ']'); // tile_%05d.jpg[0-3999]
-			console.log(inputfiles);
 			inputfiles = [inputfiles]; //expects an array of files
 
 			console.log('> stitching mosaic (' + fileParameter + ')');
@@ -371,6 +370,44 @@ function stitchMosaic2 (mainimage, usertiles, fileParameter, tempfolder, callbac
 		if(err) return callback(err);
 		return callback(null, mosaicimage_overlayed);
 	});
+}
+
+
+
+function findClosestTile(tiles, maxNrOfUseOfSameTile, hsb){
+	var closestTile = null;
+	var smallestDifference;
+
+
+	for (var i = tiles.length - 1; i >= 0; i--) {
+		var tile = tiles[i];
+
+		if( !tile.use )
+			tile.use = 0;
+
+		if(maxNrOfUseOfSameTile && (tile.use >= maxNrOfUseOfSameTile)) continue; // maximum use reached, skip this tile
+
+		// no idea if this is a good metric:
+		var diff_h = Math.abs( tile.hsb.h - hsb.h );
+		var diff_s = Math.abs( tile.hsb.s - hsb.s );
+		var diff_b = Math.abs( tile.hsb.b - hsb.b );
+		var diff_total = diff_h + diff_s + diff_b;
+		// var diff_total = diff_b;
+
+		// console.log(tile.tile + ' h:' + tile.hsb.h + ', given h:' + hsb.h + ', difference: ' + diff_h);
+
+		if(!closestTile || diff_total < smallestDifference){
+			closestTile = tile;
+			smallestDifference = diff_total;
+		}
+	};
+
+	closestTile.use++;
+
+	return {
+		closestTile: closestTile,
+		smallestDifference: smallestDifference
+	};
 }
 
 
