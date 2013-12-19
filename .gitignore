@@ -19,4 +19,4 @@ node_modules
 *.css
 !**/vendor/**/*.css
 !**/dist/**/*.css
-tests/out/*
+!**/3D client/**/*.css
