@@ -29,7 +29,7 @@ function renderMosaic (userimage, doHQ, callback, callbackHQ) {
 
 			tempfolder = path.join( path.dirname(userimage), utils.removeFileExt(path.basename(userimage)), '/' );
 
-			// TO COMPARE ANALYZING ALGORITHMS, USE COMMENTED CODE BELOW:
+			// TO COMPARE THE ANALYZING ALGORITHMS, USE COMMENTED CODE BELOW:
 
 			// var differenceCount = 0;
 			// analyzeUserImage(croppedUserImage, tempfolder, function (err, _userTiles) {
@@ -313,6 +313,10 @@ function stitchMosaic (mainimage, usertiles, fileParameter, tempfolder, callback
 }
 
 function stitchMosaic2 (mainimage, usertiles, fileParameter, tempfolder, callback) {
+	// this technique copies all inputfiles to our tempfolder with sequential filenames
+	// that way we can give all filenames to ImageMagick using a regex-expression instead of giving it 4000 files through the commandline interface
+	// it's not faster (it's slower), but we may need it if ImageMagick starts complaining about getting a command that's to long
+
 	var stitchingTime, overlayTime;
 
 	var tilesinfo = utils.getTilesInfo();
