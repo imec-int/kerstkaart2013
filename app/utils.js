@@ -19,7 +19,7 @@ function getTilesInfo () {
 	var width = tilesWide * config.mosaic.tile.width;
 	var height = tilesHeigh * config.mosaic.tile.height;
 
-	// width and height the HQ image should be, based on the number of tiles and tile size:
+	// width and height the HQ image should be, based on the number of tiles and hq tile size:
 	var widthHQ = tilesWide * config.mosaic.tilehq.width;
 	var heightHQ = tilesHeigh * config.mosaic.tilehq.height;
 

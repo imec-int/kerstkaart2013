@@ -30,6 +30,74 @@ function crop (inputfile, width, heigth, outputfile, callback) {
 	});
 }
 
+function readAllPixels (inputfile, width, height, callback) {
+	// build command
+
+	// convert ninepixels.png -colorspace HSB -format "%[pixel:p{0,1}];%[pixel:p{3}]\n" info:
+
+	var pixelArrayFormat = [];
+	for (var y = 0; y < height; y++) {
+		for (var x = 0; x < width; x++) {
+			pixelArrayFormat.push('%[pixel:p{' + x + ',' + y + '}]');
+		};
+	};
+
+	im.convert([
+		inputfile,
+		'+repage'     ,
+		'-colorspace' , 'HSB',
+		'-format'     , pixelArrayFormat.join(';'),
+		'info:'
+	], function (err, data){
+		if (err) return callback(err);
+
+		var pixels = [];
+		var dataArray = data.split(';');
+
+		for (var i = 0; i < dataArray.length; i++) {
+			var match = dataArray[i].match(/hsb\((.+)?\%,(.+)?\%,(.+)?\%\)/);
+			pixels.push({
+				// string: hsb,
+				h: parseFloat(match[1]),
+				s: parseFloat(match[2]),
+				b: parseFloat(match[3])
+			});
+		};
+		return callback(null, pixels);
+	});
+}
+
+function resize (inputfile, width, heigth, outputfile, callback) {
+	// test data, value is differenceCount in mosaic.js
+
+	// Average     1782
+	// Average4
+	// Average9    1714
+	// Average16   1503
+	// Background  3333
+	// Bilinear    1700
+	// Blend       1782
+	// Integer     1874
+	// Mesh        1782
+	// Nearest     1865
+	// NearestNeighbor  1865
+	// Spline      1748
+
+	// (normal) -resize 1275 (BEST)
+	// -adaptive-resize 1782
+	// -sample   1865
+
+	im.convert([
+		inputfile,
+		'+repage' ,
+		'-resize' , width+'x'+heigth,
+		outputfile
+	], function (err, data){
+		if (err) return callback(err);
+		return callback(null, data);
+	});
+}
+
 
 function slice (inputfile, width, heigth, outputfiles, callback) {
 	// convert out/tree_1200x1000.png +gravity -crop 100x100 out/tree_%03d.png
@@ -45,9 +113,9 @@ function slice (inputfile, width, heigth, outputfiles, callback) {
 	});
 }
 
-function getAverageRGBColor(file, callback){
+function getAverageRGBColor(inputfile, callback){
 	im.convert([
-		file,
+		inputfile,
 		'+repage'     ,
 		'-colorspace' , 'rgb',
 		'-scale'      , '1x1',
@@ -68,9 +136,9 @@ function getAverageRGBColor(file, callback){
 	});
 }
 
-function getAverageHSBColor(file, callback){
+function getAverageHSBColor(inputfile, callback){
 	im.convert([
-		file,
+		inputfile,
 		'+repage'     ,
 		'-colorspace' , 'HSB',
 		'-scale'      , '1x1',
@@ -92,14 +160,14 @@ function getAverageHSBColor(file, callback){
 }
 
 
-function getAverageColor(file, callback){
+function getAverageColor(inputfile, callback){
 	var res = {};
 
-	getAverageRGBColor(file, function (err, rgb){
+	getAverageRGBColor(inputfile, function (err, rgb){
 		if(err) return callback(err);
 		res.rgb = rgb;
 
-		getAverageHSBColor(file, function (err, hsb){
+		getAverageHSBColor(inputfile, function (err, hsb){
 			if(err) return callback(err);
 			res.hsb = hsb;
 
@@ -178,6 +246,8 @@ exports.stitchImages = stitchImages;
 exports.overlayImages = overlayImages;
 
 
+exports.resize = resize;
+exports.readAllPixels = readAllPixels;
 
 
 

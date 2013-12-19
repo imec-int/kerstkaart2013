@@ -28,7 +28,42 @@ function renderMosaic (userimage, doHQ, callback, callbackHQ) {
 			croppedUserImage = _croppedUserImage;
 
 			var tempfolder = path.join( path.dirname(userimage), utils.removeFileExt(path.basename(userimage)), '/' );
-			analyzeUserImage(croppedUserImage, tempfolder, $); // needs tempfolder to store temp tiles
+
+			// TO COMPARE ANALYZING ALGORITHMS, USE COMMENTED CODE BELOW:
+
+			// var differenceCount = 0;
+			// analyzeUserImage(croppedUserImage, tempfolder, function (err, _userTiles) {
+			// 	if(err) return $(err);
+
+			// 	userTiles = _userTiles;
+
+			// 	analyzeUserImage2(croppedUserImage, tempfolder, function (err, userTiles2) {
+			// 		if(err) return $(err);
+
+			// 		userTiles = _.sortBy(userTiles, function (tile){ return tile.index; });
+			// 		userTiles2 = _.sortBy(userTiles2, function (tile){ return tile.index; });
+
+			// 		// compare the hsb values:
+
+			// 		for (var i = 0; i < userTiles.length; i++) {
+			// 			var h = (userTiles[i].hsb.h - userTiles2[i].hsb.h);
+			// 			var s = (userTiles[i].hsb.s - userTiles2[i].hsb.s);
+			// 			var b = (userTiles[i].hsb.b - userTiles2[i].hsb.b);
+
+			// 			// console.log("> difference: " + Math.round(h) + " " + Math.round(s) + " " + Math.round(b) );
+
+			// 			if(Math.abs(h) > 3 || Math.abs(b) > 3 || Math.abs(s) > 3)
+			// 				differenceCount++;
+			// 		};
+
+			// 		console.log("> differenceCount: " + differenceCount);
+
+			// 		$(null, userTiles2);
+			// 	});
+			// });
+
+
+			analyzeUserImage2(croppedUserImage, tempfolder, $);
 		},
 
 		function (_userTiles, $) {
@@ -43,7 +78,7 @@ function renderMosaic (userimage, doHQ, callback, callbackHQ) {
 			matchedUserTiles = _matchedUserTiles;
 
 			// now stich it:
-			stitchMosaic(croppedUserImage, matchedUserTiles, 'normalfile', $)
+			stitchMosaic(croppedUserImage, matchedUserTiles, 'normalfile', $);
 		},
 
 		function (mosaicimage, $) {
@@ -111,11 +146,12 @@ function cropUserImageHQ (inputimage, callback) {
 }
 
 function analyzeUserImage (inputimage, tempfolder, callback) {
-	var tilesinfo, tileFiles, sliceTime, analyzeTime, usertiles;
+	var tilesinfo, tileFiles, time, analyzeTime, usertiles;
 
 	async.waterfall([
 		function ($) {
 			// make tempdir first:
+			time = Date.now();
 			fs.mkdir(tempfolder, $);
 		},
 
@@ -127,12 +163,10 @@ function analyzeUserImage (inputimage, tempfolder, callback) {
 			tileFiles = path.join( tempfolder, tileFiles );
 
 			console.log('> slicing user image into tiles of ' + config.mosaic.tile.width + 'x' + config.mosaic.tile.height + ' into ' + tileFiles);
-			sliceTime = Date.now();
 			image.slice( inputimage, config.mosaic.tile.width, config.mosaic.tile.height, tileFiles, $);
 		},
 
 		function (imageres, $) {
-			console.log('> time to slice was ' + (Date.now() - sliceTime) + ' ms');
 			// now we analyze each tile and store that info in an array of usertiles:
 			usertiles = [];
 			// recreate the filenames ImageMagick made using the tileFiles string:
@@ -142,7 +176,7 @@ function analyzeUserImage (inputimage, tempfolder, callback) {
 			};
 
 			// don't do more than 10 cuncurrent operations or we will get ImageMagick errors:
-			analyzeTime = Date.now();
+			console.log('> get average color for each tile');
 			async.eachLimit(usertiles, 10, function (tile, $for){
 				image.getAverageHSBColor(tile.temptilefile, function (err, hsb){
 					if(err) return $for(err);
@@ -154,7 +188,7 @@ function analyzeUserImage (inputimage, tempfolder, callback) {
 		},
 
 		function ($) {
-			console.log('> time to analyze was ' + (Date.now() - analyzeTime) + ' ms');
+			console.log('> time to analyze with technique 1 was ' + (Date.now() - time) + ' ms');
 
 			$();
 		}
@@ -162,6 +196,51 @@ function analyzeUserImage (inputimage, tempfolder, callback) {
 	], function (err) {
 		if(err) return callback(err);
 		return callback(null, usertiles);
+	});
+}
+
+function analyzeUserImage2 (inputimage, tempfolder, callback) {
+	var time, onePixelTiles;
+
+	var tilesinfo = utils.getTilesInfo();
+
+	async.waterfall([
+		function ($) {
+			// make tempdir first:
+			time = Date.now();
+			fs.mkdir(tempfolder, $);
+		},
+
+		function ($) {
+			// let's resize the image so that 1px = 1 tile
+			onePixelImage = path.join( tempfolder, 'one_pixel_image.png' );
+
+			console.log('> resing to one pixel image');
+			image.resize(inputimage, tilesinfo.wide, tilesinfo.heigh, onePixelImage, $);
+		},
+
+		function (imageres, $) {
+			// now lets read all pixels it up
+
+			console.log('> reading out pixel values');
+			image.readAllPixels(onePixelImage, tilesinfo.wide, tilesinfo.heigh, $);
+		},
+
+		function (pixels, $) {
+			onePixelTiles = [];
+
+			for (var i = 0; i < pixels.length; i++) {
+				onePixelTiles.push( {index: i, hsb: pixels[i]} );
+			};
+
+			console.log('> time to analyze with technique 2 was ' + (Date.now() - time) + ' ms');
+
+			$();
+		},
+
+	], function (err) {
+		if(err) return callback(err);
+		return callback(null, onePixelTiles);
 	});
 }
 
