@@ -245,14 +245,12 @@ function analyzeUserImage2 (inputimage, tempfolder, callback) {
 }
 
 function matchTiles (usertiles, callback) {
-	var maxUseOfSameTile = 10;
-
 	mongobase.getAllTiles(function (err, tiles) {
 		if(err) return callback(err);
 
 		var L = usertiles.length;
 		for (var i = 0; i < L; i++) {
-			var o = findClosestTile(tiles, usertiles[i], maxUseOfSameTile);
+			var o = findClosestTile(tiles, usertiles[i], config.mosaic.maxuseofsametile, config.mosaic.minspacebetweensametile);
 
 			// console.log("> " + tiles[i].temptilefile + " - smallestDifference: " + o.smallestDifference);
 
@@ -374,7 +372,7 @@ function stitchMosaic2 (mainimage, usertiles, fileParameter, tempfolder, callbac
 
 
 
-function findClosestTile(tiles, usertile, maxNrOfUseOfSameTile){
+function findClosestTile(tiles, usertile, maxNrOfUseOfSameTile, minSpaceBetweenSameTile){
 	var closestTile = null;
 	var smallestDifference;
 
@@ -385,7 +383,7 @@ function findClosestTile(tiles, usertile, maxNrOfUseOfSameTile){
 		if( !tile.use )
 			tile.use = 0;
 
-		if(tile.lastusedindex && ( Math.abs(usertile.index - tile.lastusedindex) < 10) ) continue; // dont use a tile if it's recently used
+		if(tile.lastusedindex && ( Math.abs(usertile.index - tile.lastusedindex) < minSpaceBetweenSameTile) ) continue; // dont use a tile if it's recently used
 
 		if(maxNrOfUseOfSameTile && (tile.use >= maxNrOfUseOfSameTile)) continue; // maximum use reached, skip this tile
 
