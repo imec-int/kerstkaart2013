@@ -71,7 +71,7 @@ async.waterfall([
 			if(outputfileflying)
 				outputfileflyingAbsolute = path.join(ROOTDIR, outputfileflying)
 
-			console.log('> cropping and analyzing: ' + outputfile);
+			console.log('> cropping and analyzing: ' + basenameNoExt);
 			cropAndAverageColor(image, path.join(ROOTDIR, outputfile), path.join(ROOTDIR, outputfilehq), outputfileflyingAbsolute, function (err, averageColor){
 				if(err) return $for(err);
 
