@@ -252,7 +252,7 @@ function matchTiles (usertiles, callback) {
 
 		var L = usertiles.length;
 		for (var i = 0; i < L; i++) {
-			var o = findClosestTile(tiles, maxUseOfSameTile, usertiles[i].hsb);
+			var o = findClosestTile(tiles, usertiles[i], maxUseOfSameTile);
 
 			// console.log("> " + tiles[i].temptilefile + " - smallestDifference: " + o.smallestDifference);
 
@@ -374,7 +374,7 @@ function stitchMosaic2 (mainimage, usertiles, fileParameter, tempfolder, callbac
 
 
 
-function findClosestTile(tiles, maxNrOfUseOfSameTile, hsb){
+function findClosestTile(tiles, usertile, maxNrOfUseOfSameTile){
 	var closestTile = null;
 	var smallestDifference;
 
@@ -385,16 +385,19 @@ function findClosestTile(tiles, maxNrOfUseOfSameTile, hsb){
 		if( !tile.use )
 			tile.use = 0;
 
+		if(tile.lastusedindex && ( Math.abs(usertile.index - tile.lastusedindex) < 10) ) continue; // dont use a tile if it's recently used
+
 		if(maxNrOfUseOfSameTile && (tile.use >= maxNrOfUseOfSameTile)) continue; // maximum use reached, skip this tile
 
+
 		// no idea if this is a good metric:
-		var diff_h = Math.abs( tile.hsb.h - hsb.h );
-		var diff_s = Math.abs( tile.hsb.s - hsb.s );
-		var diff_b = Math.abs( tile.hsb.b - hsb.b );
+		var diff_h = Math.abs( tile.hsb.h - usertile.hsb.h );
+		var diff_s = Math.abs( tile.hsb.s - usertile.hsb.s );
+		var diff_b = Math.abs( tile.hsb.b - usertile.hsb.b );
 		var diff_total = diff_h + diff_s + diff_b;
 		// var diff_total = diff_b;
 
-		// console.log(tile.tile + ' h:' + tile.hsb.h + ', given h:' + hsb.h + ', difference: ' + diff_h);
+		// console.log(tile.tile + ' h:' + tile.hsb.h + ', given h:' + usertile.hsb.h + ', difference: ' + diff_h);
 
 		if(!closestTile || diff_total < smallestDifference){
 			closestTile = tile;
@@ -402,6 +405,7 @@ function findClosestTile(tiles, maxNrOfUseOfSameTile, hsb){
 		}
 	};
 
+	closestTile.lastusedindex = usertile.index;
 	closestTile.use++;
 
 	return {
