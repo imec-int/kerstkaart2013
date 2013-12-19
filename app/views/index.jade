@@ -1,19 +1,16 @@
 !!! 5
 html
-	head
-		//- meta(name='viewport', content='initial-scale=1.0, user-scalable=no')
-		title= title
-		link(href='http://fonts.googleapis.com/css?family=Alegreya+SC:400,700,400italic,700italic,900,900italic', rel='stylesheet', type='text/css')
-		link(rel='stylesheet', href="/stylesheets/style.css")
+head
+    meta(http-equiv='Content-Type', content='text/html; charset=UTF-8')
+    title= title
+    meta(name='viewport', content='width=1024, maximum-scale=1, user-scalable=no')
 
-		script(type='text/javascript', src='//code.jquery.com/jquery.min.js')
-		script(type='text/javascript', src='/javascripts/index.js')
-
-	body
-		.christmassy Merry Muffler and a Happy New Gear!
-		input#files.btn.btn-primary(type="file", name="files[]", accept="image/*")
-		#result
-		br
-		img#mosaicimage
-
-
+    link(rel='stylesheet', type='text/css', href='/vendor/famous/famous.css')
+    link(rel='stylesheet', type='text/css', href='/vendor/famous/app.css')
+    script(type='text/javascript', src='/vendor/famous/classList.js')
+    script(type='text/javascript', src='/vendor/famous/requestAnimationFrame.js')
+    script(type='text/javascript', src='/vendor/famous/app.js')
+    script(type='text/javascript', src='/javascripts/cam.js')
+  body(style='')
+    #main.container
+    #overlay.container

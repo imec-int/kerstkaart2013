@@ -45,6 +45,13 @@ app.get('/', function(req, res){
 	});
 });
 
+app.get('/nocss3', function(req, res){
+	res.render('nocss3', {
+		title: '| MiX Kerstkaart 2013'
+	});
+});
+
+
 app.get('/test', function(req, res){
 	res.render('test', {
 		title: '| MiX Kerstkaart 2013'
