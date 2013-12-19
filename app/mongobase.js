@@ -22,15 +22,25 @@ function saveTile (tile, callback){
 }
 
 function getAllTiles (callback) {
-	db.tiles.find({},function (err, res) {
+	db.tiles.find({}, function (err, res) {
+		if(err) return callback(err);
+		return callback(null, res);
+	});
+}
+
+function getAllTilesWithTitle (callback) {
+	db.tiles.find({tileflying: {$exists:true}}, function (err, res) {
 		if(err) return callback(err);
 		return callback(null, res);
 	});
 }
 
 
+
+
 exports.clearTiles = clearTiles;
 exports.saveTile = saveTile;
 exports.getAllTiles = getAllTiles;
+exports.getAllTilesWithTitle = getAllTilesWithTitle;
 
 

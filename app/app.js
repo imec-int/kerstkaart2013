@@ -39,24 +39,41 @@ http.createServer(app).listen(app.get('port'), function(){
 	console.log("Express server listening on port " + app.get('port'));
 });
 
-app.get('/', function(req, res){
+app.get('/', function (req, res){
 	res.render('index', {
 		title: '| MiX Kerstkaart 2013',
 		fancybg: true
 	});
 });
 
-app.get('/simple', function(req, res){
+app.get('/simple', function (req, res){
 	res.render('index', {
 		title: '| MiX Kerstkaart 2013',
 		fancybg: false
 	});
 });
 
-app.get('/fancybg', function(req, res){
-	res.render('fancybg', {
-		title: 'background | MiX Kerstkaart 2013'
-	});
+app.get('/fancybg', function (req, res){
+	mongobase.getAllTilesWithTitle(function (err, fulltiles) {
+		if(err) return utils.sendError(err, res);
+
+		var tiles = _.map(fulltiles, function (tile){
+			return {
+				title: tile.title,
+				image: '/mosaic/' + tile.tileflying
+			};
+		});
+
+		tiles = _.shuffle(tiles); //shuffle the tiles
+
+		res.render('fancybg', {
+			title: 'background | MiX Kerstkaart 2013',
+			tiles: tiles
+		});
+	})
+
+
+
 });
 
 app.post('/xhrupload', function (req, res){
@@ -89,7 +106,7 @@ app.post('/xhrupload', function (req, res){
 function renderMosaic (userimage, req, res) {
 	// this function has 2 callbacks, one with the normal(lowres) version of the mosaic and one with the highres version of the mosaic
 	// mosaic.renderMosaic( userimage, callback(err, mosaicimage), callbackHQ(err, mosaicimageHQ) )
-	mosaic.renderMosaic( userimage, false,
+	mosaic.renderMosaic( userimage, true,
 		function (err, mosaicimage) {
 			if(err) return utils.sendError(err, res);
 

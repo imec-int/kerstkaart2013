@@ -7,10 +7,16 @@ head
 
     link(rel='stylesheet', type='text/css', href='/vendor/famous/famous.css')
     link(rel='stylesheet', type='text/css', href='/vendor/famous/app.css')
+
+    script.
+        Fancybg = {};
+
+        Fancybg.tiles = !{JSON.stringify(tiles)};
+
     script(type='text/javascript', src='/vendor/famous/classList.js')
     script(type='text/javascript', src='/vendor/famous/requestAnimationFrame.js')
     script(type='text/javascript', src='/vendor/famous/app.js')
     script(type='text/javascript', src='/javascripts/cam.js')
   body(style='')
     #main.container
-    #overlay.container
+    //- #overlay.container
