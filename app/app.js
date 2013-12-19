@@ -45,6 +45,12 @@ app.get('/', function(req, res){
 	});
 });
 
+app.get('/test', function(req, res){
+	res.render('test', {
+		title: '| MiX Kerstkaart 2013'
+	});
+});
+
 app.post('/xhrupload', function (req, res){
 	console.log("incomming XHR upload");
 
