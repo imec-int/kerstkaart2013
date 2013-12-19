@@ -29,8 +29,8 @@ function getTilesInfo () {
 		total   : tilesWide * tilesHeigh,
 		width   : width,
 		height  : height,
-		widthHQ : width,
-		heightHQ: height
+		widthHQ : widthHQ,
+		heightHQ: heightHQ
 	};
 }
 
