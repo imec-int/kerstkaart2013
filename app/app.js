@@ -95,10 +95,14 @@ function renderMosaic (userimage, req, res) {
 	);
 }
 
+
 // YOUNES stuff:
 
 app.get('/share', function(req, res){
 	res.render('share', {
-		title         : '| Share Your MiX Kerstkaart 2013'
+		title     	: 'Share Your MiX Kerstkaart 2013',
+		message 	: 'iwasmixed - We wish you amazing holydays.',
+		imgUrl		: 'http://d3j5vwomefv46c.cloudfront.net/photos/large/828376205.jpg',
+		pageUrl		: 'rrrrr http://twitpic.com/dp6z65'
 	});
 });
