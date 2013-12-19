@@ -11,7 +11,7 @@ var printf = require('printf');
 var ROOTDIR = path.join('./', config.mosaic.folders.root);
 
 function renderMosaic (userimage, doHQ, callback, callbackHQ) {
-	var orientedImage, croppedUserImage, userTiles, matchedTiles, croppedUserImageHQ;
+	var orientedImage, croppedUserImage, userTiles, matchedTiles, croppedUserImageHQ, tempfolder;
 
 	async.waterfall([
 		function ($) {
@@ -27,9 +27,9 @@ function renderMosaic (userimage, doHQ, callback, callbackHQ) {
 		function (_croppedUserImage, $) {
 			croppedUserImage = _croppedUserImage;
 
-			var tempfolder = path.join( path.dirname(userimage), utils.removeFileExt(path.basename(userimage)), '/' );
+			tempfolder = path.join( path.dirname(userimage), utils.removeFileExt(path.basename(userimage)), '/' );
 
-			// TO COMPARE ANALYZING ALGORITHMS, USE COMMENTED CODE BELOW:
+			// TO COMPARE THE ANALYZING ALGORITHMS, USE COMMENTED CODE BELOW:
 
 			// var differenceCount = 0;
 			// analyzeUserImage(croppedUserImage, tempfolder, function (err, _userTiles) {
@@ -78,7 +78,7 @@ function renderMosaic (userimage, doHQ, callback, callbackHQ) {
 			matchedUserTiles = _matchedUserTiles;
 
 			// now stich it:
-			stitchMosaic(croppedUserImage, matchedUserTiles, 'normalfile', $);
+			stitchMosaic(croppedUserImage, matchedUserTiles, 'normalfile', tempfolder, $);
 		},
 
 		function (mosaicimage, $) {
@@ -95,7 +95,7 @@ function renderMosaic (userimage, doHQ, callback, callbackHQ) {
 
 			croppedUserImageHQ = _croppedUserImageHQ;
 
-			stitchMosaic(croppedUserImageHQ, matchedUserTiles, 'hqfile', $);
+			stitchMosaic(croppedUserImageHQ, matchedUserTiles, 'hqfile', tempfolder, $);
 		},
 
 		function (mosaicimageHQ, $) {
@@ -265,7 +265,7 @@ function matchTiles (usertiles, callback) {
 	});
 }
 
-function stitchMosaic (mainimage, usertiles, fileParameter, callback) {
+function stitchMosaic (mainimage, usertiles, fileParameter, tempfolder, callback) {
 	var stitchingTime, overlayTime;
 
 	var tilesinfo = utils.getTilesInfo();
@@ -311,6 +311,69 @@ function stitchMosaic (mainimage, usertiles, fileParameter, callback) {
 		return callback(null, mosaicimage_overlayed);
 	});
 }
+
+function stitchMosaic2 (mainimage, usertiles, fileParameter, tempfolder, callback) {
+	// this technique copies all inputfiles to our tempfolder with sequential filenames
+	// that way we can give all filenames to ImageMagick using a regex-expression instead of giving it 4000 files through the commandline interface
+	// it's not faster (it's slower), but we may need it if ImageMagick starts complaining about getting a command that's to long
+
+	var stitchingTime, overlayTime;
+
+	var tilesinfo = utils.getTilesInfo();
+	var ext = path.extname( usertiles[0][fileParameter] );
+	var destinationFileString = 'tile_%0'+(''+tilesinfo.total).length+'d' + ext; // create some filename like tile_%05d.jpg
+
+	var basename = utils.removeFileExt(path.basename(mainimage));
+	var mosaicimage = path.join(ROOTDIR, config.mosaic.folders.output, 'mosaic_'+basename+'.jpg');
+	var mosaicimage_overlayed = path.join(ROOTDIR, config.mosaic.folders.output, 'mosaic_'+basename+'_overlayed.jpg');
+
+	async.waterfall([
+		function ($) {
+			// sort it before we stitch it:
+			usertiles = _.sortBy(usertiles, function (tile){ return tile.index; });
+
+			// first copy all inputfiles to our tempfolder with sequential filenames:
+			// that way we can give all filenames to ImageMagick with regex-expression
+			async.eachLimit(usertiles, 10, function (tile, $for) {
+				var sourceFile = path.join(ROOTDIR, tile[fileParameter]);
+				var destFile = path.join( tempfolder, printf(destinationFileString, tile.index) );
+
+				utils.copyFile(sourceFile, destFile, $for);
+			}, $);
+		},
+
+		function ($) {
+			var inputfiles = path.join( tempfolder,  destinationFileString + '[0-' + (tilesinfo.total-1) + ']'); // tile_%05d.jpg[0-3999]
+			console.log(inputfiles);
+			inputfiles = [inputfiles]; //expects an array of files
+
+			console.log('> stitching mosaic (' + fileParameter + ')');
+			stitchingTime = Date.now();
+			image.stitchImages(inputfiles, tilesinfo.wide, tilesinfo.heigh, mosaicimage, $);
+		},
+
+		function (imageres, $) {
+			console.log('> time to stitch with technique 2 was ' + (Date.now() - stitchingTime) + ' ms (' + fileParameter + ')');
+
+			// overlay stitched image with original:
+			console.log('> overlaying mosaic (' + fileParameter + ')');
+			overlayTime = Date.now();
+			image.overlayImages( mainimage, mosaicimage, mosaicimage_overlayed, $);
+		},
+
+		function (imageres, $) {
+			console.log('> time to overlay was ' + (Date.now() - overlayTime) + ' ms (' + fileParameter + ')');
+
+			$();
+		}
+
+	], function (err) {
+		if(err) return callback(err);
+		return callback(null, mosaicimage_overlayed);
+	});
+}
+
+
 
 
 exports.renderMosaic = renderMosaic;
