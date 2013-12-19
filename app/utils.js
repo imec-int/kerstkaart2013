@@ -139,6 +139,9 @@ function cleanFolder (folder, callback) {
 	});
 }
 
+/**
+ * just removes overything from the path up to ... public/ so it can be accessed by the browser
+ */
 function wwwdfy (path) {
 	var match = path.match(/public(\/.+)/);
 	if(match && match[1]) return match[1];
@@ -146,7 +149,7 @@ function wwwdfy (path) {
 }
 
 /**
- * Handig om meteen errors naar de client te sturen en ook te loggen
+ * Handy function to send errors back to the browser and display them at the same time in the console
  */
 function sendError(err, webresponse){
 	var o = {
@@ -162,6 +165,35 @@ function sendError(err, webresponse){
 	webresponse.json(o);
 }
 
+function copyFile(source, target, cb) {
+	var cbCalled = false;
+
+	function done(err) {
+		if (!cbCalled) {
+			cb(err);
+			cbCalled = true;
+		}
+	}
+
+	var rd = fs.createReadStream(source);
+	rd.on("error", function (err) {
+		console.log(err);
+		done(err);
+	});
+
+	var wr = fs.createWriteStream(target);
+	wr.on("error", function (err) {
+		console.log(err);
+		done(err);
+	});
+
+	wr.on("close", function (ex) {
+		done();
+	});
+
+	rd.pipe(wr);
+}
+
 exports.getTilesInfo = getTilesInfo;
 exports.removeFileExt = removeFileExt;
 exports.cropAndAverageColor = cropAndAverageColor;
@@ -170,6 +202,7 @@ exports.getXY = getXY;
 exports.cleanFolder = cleanFolder;
 exports.wwwdfy = wwwdfy;
 exports.sendError = sendError;
+exports.copyFile = copyFile;
 
 
 
