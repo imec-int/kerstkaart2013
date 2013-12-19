@@ -41,7 +41,7 @@ http.createServer(app).listen(app.get('port'), function(){
 
 app.get('/', function(req, res){
 	res.render('index', {
-		title         : '| MiX Kerstkaart 2013'
+		title: '| MiX Kerstkaart 2013'
 	});
 });
 
