@@ -2,19 +2,17 @@ var async = require('async');
 var _ = require('underscore');
 var fs = require('fs');
 var path = require('path');
-var config = require('../config');
-var image = require('../image');
-var mongobase = require('../mongobase');
-var utils = require('../utils');
+var config = require('./config');
+var image = require('./image');
+var mongobase = require('./mongobase');
+var utils = require('./utils');
 
 
 
-var SOME_FOLDER_WITH_IMAGES = '../raw_images/';
+var SOME_FOLDER_WITH_IMAGES = './raw_images/';
 
 
-
-
-var ROOTDIR = path.join('../', config.mosaic.folders.root);
+var ROOTDIR = path.join(__dirname, config.mosaic.folders.root);
 
 // The Only thing we can do beforehand, is cropping and analyzing the tile pictures:
 console.log('> POPULATE AND ANALYZE TILES');

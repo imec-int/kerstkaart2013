@@ -6,8 +6,7 @@ var fs = require('fs');
 var path = require('path');
 var async = require('async');
 var printf = require('printf');
-var config = require('../config');
-var image = require('../image');
+var image = require('./image');
 
 var USE_NEW_NAME = false;
 var NEW_NAME_REGEX  = '_twitterimage_%05d.jpg';
@@ -18,7 +17,7 @@ var HEIGHT = 256;
 
 // var sourcefolder = '/Users/sam/Documents/lode_images/';
 var sourcefolder = '/Users/sam/Dropbox/MiX/kerstkaart2013/';
-var outputfolder = '../../data/raw_bootstrap_images/';
+var outputfolder = './raw_images/';
 
 
 

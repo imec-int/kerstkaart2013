@@ -21,13 +21,13 @@ Install Ghostscript using ```brew install ghostscript```
 
 ### Pre-process the tiles you will use in the mosaic
 
-The pictures under ```data/raw_bootstrap_images/``` are used to populate the database with tiles.
+The pictures under ```raw_images/``` are used to populate the database with tiles.
 
 Edit ```app/config.js``` 'till you're happy.
 
 Make sure you're running [MongoDB](http://www.mongodb.org/downloads)
 
-Run ```setup.js``` from the ```app/setup/``` folder. This will scale and analyze the pictures you selected and store their info in the database.
+Run ```app/setup.js```. This will scale and analyze the pictures you selected and store their info in the database.
 
 All files generated are stored under ```app/public/mosaic``` as described in the ```config.js``` file.
 
