@@ -7,6 +7,7 @@ var fs = require('fs');
 var async = require('async');
 var _ = require('underscore');
 var crypto = require('crypto');
+var MobileDetect = require('mobile-detect');
 var config = require('./config');
 var mosaic = require('./mosaic');
 var mongobase = require('./mongobase');
@@ -54,6 +55,9 @@ app.get('/simple', function (req, res){
 });
 
 app.get('/fancybg', function (req, res){
+	var md = new MobileDetect(req.headers['user-agent']);
+
+
 	mongobase.getAllTilesWithTitle(function (err, fulltiles) {
 		if(err) return utils.sendError(err, res);
 
@@ -65,6 +69,11 @@ app.get('/fancybg', function (req, res){
 		});
 
 		tiles = _.shuffle(tiles); //shuffle the tiles
+
+		if( md.mobile() ){
+			console.log('its a mobile');
+			tiles = tiles.slice(0, 100); // limit to 100 tiles
+		}
 
 		res.render('fancybg', {
 			title: 'background | MiX Kerstkaart 2013',

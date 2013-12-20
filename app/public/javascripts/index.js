@@ -1,7 +1,7 @@
 var App = function (options){
 
-	var fileuploadEl = $("#files");
-	var statusEl = $("#result")
+	var fileuploadEl = $("#fileinput");
+	var statusEl = $("#status")
 
 	var init = function (){
 		updateStatus("init");
@@ -14,7 +14,7 @@ var App = function (options){
 		uploadImage(event.target.files[0], function (data){
 			console.log(data);
 
-			$("#mosaicimage").attr('src', data.mosaicimage);
+			$(".imagecontainer").css('background-image', 'url("'+data.mosaicimage+'")');
 		});
 	};
 
