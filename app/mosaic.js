@@ -8,7 +8,7 @@ var mongobase = require('./mongobase');
 var utils = require('./utils');
 var printf = require('printf');
 
-var ROOTDIR = path.join('./', config.mosaic.folders.root);
+var ROOTDIR = path.join(__dirname, config.mosaic.folders.root);
 
 function renderMosaic (userimage, doHQ, callback, callbackHQ) {
 	var orientedImage, croppedUserImage, userTiles, matchedTiles, croppedUserImageHQ, tempfolder;
@@ -215,7 +215,7 @@ function analyzeUserImage2 (inputimage, tempfolder, callback) {
 			// let's resize the image so that 1px = 1 tile
 			onePixelImage = path.join( tempfolder, 'one_pixel_image.png' );
 
-			console.log('> resing to one pixel image');
+			console.log('> resizing to one pixel image');
 			image.resize(inputimage, tilesinfo.wide, tilesinfo.heigh, onePixelImage, $);
 		},
 
