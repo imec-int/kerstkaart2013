@@ -68,7 +68,6 @@ function readAllPixels_old (inputfile, width, height, callback) {
 }
 
 function readAllPixels (inputfile, width, height, callback) {
-	console.log('new readAllPixels');
 	// build command
 
 	// convert ninepixels.png -colorspace HSB -format "%[pixel:p{0,1}];%[pixel:p{3}]\n" info:
