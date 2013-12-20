@@ -86,7 +86,7 @@ app.get('/fancybg', function (req, res){
 });
 
 app.post('/xhrupload', function (req, res){
-	console.log("incomming XHR upload");
+	console.log("incoming XHR upload");
 
 	if(!req.xhr) return utils.sendError(new Error('got no xhr request'), res);
 
