@@ -121,3 +121,12 @@ stitch the overlayed images back together
 ```
 montage 'out/images_%03d.png[0-119]' -tile 12x10 -geometry +0+0 out/stitched_overlayed_image.png
 ```
+
+composite images
+```
+composite -geometry +60+105 testmosaic.jpg underlay.png test.png
+```
+
+```
+composite overlay.png test.png test.png
+```

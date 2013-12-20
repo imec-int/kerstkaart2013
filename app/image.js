@@ -1,5 +1,6 @@
 var im = require('simple-imagemagick');
 var fs = require('fs');
+var async = require('async');
 
 // still need to figure out what '+repage' does, but it fixes a lot of issues :p
 
@@ -10,9 +11,9 @@ function autoOrient (inputfile, outputfile, callback) {
 		'+repage'     ,
 		'-auto-orient',
 		outputfile
-	], function (err, data){
+	], function (err, stdout, stderr){
 		if (err) return callback(err);
-		return callback(null, data);
+		return callback(null, stdout);
 	});
 }
 
@@ -24,9 +25,9 @@ function crop (inputfile, width, heigth, outputfile, callback) {
 		'-gravity'    , 'center',
 		'-crop'       , width+'x'+heigth+'+0+0',
 		outputfile
-	], function (err, data){
+	], function (err, stdout, stderr){
 		if (err) return callback(err);
-		return callback(null, data);
+		return callback(null, stdout);
 	});
 }
 
@@ -48,11 +49,11 @@ function readAllPixels_old (inputfile, width, height, callback) {
 		'-colorspace' , 'HSB',
 		'-format'     , pixelArrayFormat.join(';'),
 		'info:'
-	], function (err, data){
+	], function (err, stdout, stderr){
 		if (err) return callback(err);
 
 		var pixels = [];
-		var dataArray = data.split(';');
+		var dataArray = stdout.split(';');
 
 		for (var i = 0; i < dataArray.length; i++) {
 			var match = dataArray[i].match(/hsb\((.+)?\%,(.+)?\%,(.+)?\%\)/);
@@ -86,11 +87,11 @@ function readAllPixels (inputfile, width, height, callback) {
 		'-colorspace' , 'HSB',
 		'-format'     , pixelArrayFormat.join('|'),
 		'info:'
-	], function (err, data){
+	], function (err, stdout, stderr){
 		if (err) return callback(err);
 
 		var pixels = [];
-		var dataArray = data.split('|');
+		var dataArray = stdout.split('|');
 
 		for (var i = 0; i < dataArray.length; i++) {
 			var values = dataArray[i].split(';');
@@ -130,9 +131,9 @@ function resize (inputfile, width, heigth, outputfile, callback) {
 		'+repage' ,
 		'-resize' , width+'x'+heigth,
 		outputfile
-	], function (err, data){
+	], function (err, stdout, stderr){
 		if (err) return callback(err);
-		return callback(null, data);
+		return callback(null, stdout);
 	});
 }
 
@@ -145,9 +146,9 @@ function slice (inputfile, width, heigth, outputfiles, callback) {
 		'+repage'     ,
 		'-crop'       , width+'x'+heigth,
 		outputfiles
-	], function (err, data){
+	], function (err, stdout, stderr){
 		if (err) return callback(err);
-		return callback(null, data);
+		return callback(null, stdout);
 	});
 }
 
@@ -159,9 +160,9 @@ function getAverageHSBColor_old(inputfile, callback){
 		'-scale'      , '1x1',
 		'-format'     , '\'%[pixel:u]\'',
 		'info:'
-	], function (err, data){
+	], function (err, stdout, stderr){
 		if (err) return callback(err);
-		var hsb = data.replace(/'(.+)'/, '$1');
+		var hsb = stdout.replace(/'(.+)'/, '$1');
 
 		console.log(hsb);
 
@@ -185,10 +186,10 @@ function getAverageHSBColor(inputfile, callback){
 		'-scale'      , '1x1',
 		'-format'     , '%[fx:r*100];%[fx:g*100];%[fx:b*100]',
 		'info:'
-	], function (err, data){
+	], function (err, stdout, stderr){
 		if (err) return callback(err);
 
-		var values = data.split(';');
+		var values = stdout.split(';');
 
 		var hsb = {
 			h: parseFloat(values[0]),
@@ -223,9 +224,9 @@ function createSolidImage(size, rgb, outputfile, callback){
 		'-size'       , size,
 		'xc:'         + rgb,
 		outputfile,
-	], function (err, data){
+	], function (err, stdout, stderr){
 		if (err) return callback(err);
-		return callback(null, data);
+		return callback(null, stdout);
 	});
 }
 
@@ -235,9 +236,9 @@ function modulate(inputfile, h, b, s, outputfile, callback){
 		'+repage'     ,
 		'-modulate'   , b+','+s+','+h,
 		outputfile
-	], function (err, data){
+	], function (err, stdout, stderr){
 		if (err) return callback(err);
-		return callback(null, data);
+		return callback(null, stdout);
 	});
 }
 
@@ -252,9 +253,9 @@ function stitchImages (inputfiles, tilesWide, tilesHeigh, outputfile, callback) 
 
 	parameters = inputfiles.concat(parameters); // begin the parameters with the input files
 
-	im.montage(parameters, function (err, data){
+	im.montage(parameters, function (err, stdout, stderr){
 		if (err) return callback(err);
-		return callback(null, data);
+		return callback(null, stdout);
 	});
 }
 
@@ -267,12 +268,36 @@ function overlayImages (inputimage1, inputimage2, outputfile, callback){
 		inputimage1,
 		inputimage2,
 		outputfile
-	], function (err, data){
+	], function (err, stdout, stderr){
 		if (err) return callback(err);
-		return callback(null, data);
+		return callback(null, stdout);
 	});
+}
 
 
+function addUnderlayOverlay (inputfile, underlay, overlay, offsetX, offsetY, outputfileUnderlayOnly, outputfile, callback) {
+	// composite -geometry +60+105 testmosaic.jpg underlay.png test.png
+	// composite overlay.png test.png test.png
+
+	async.waterfall([
+		function ($) {
+			im.composite([
+				'-geometry'   , '+'+offsetX+'+'+offsetY,
+				inputfile,
+				underlay,
+				outputfileUnderlayOnly
+			], $);
+		},
+
+		function (stdout, stderr, $) {
+			im.composite([
+				overlay,
+				outputfileUnderlayOnly,
+				outputfile
+			], $);
+		}
+
+	], callback);
 }
 
 exports.autoOrient = autoOrient;
@@ -290,6 +315,8 @@ exports.overlayImages = overlayImages;
 exports.resize = resize;
 exports.readAllPixels_old = readAllPixels_old;
 exports.readAllPixels = readAllPixels;
+
+exports.addUnderlayOverlay = addUnderlayOverlay;
 
 
 

@@ -116,7 +116,7 @@ function renderMosaic (userimage, req, res) {
 	// this function has 2 callbacks, one with the normal(lowres) version of the mosaic and one with the highres version of the mosaic
 	// mosaic.renderMosaic( userimage, callback(err, mosaicimage), callbackHQ(err, mosaicimageHQ) )
 	mosaic.renderMosaic( userimage, true,
-		function (err, mosaicimage) {
+		function (err, mosaicimageUnderlayOnly, mosaicimage) {
 			if(err) return utils.sendError(err, res);
 
 			console.log( "Mosaic ready... sending it back to browser" );
@@ -125,7 +125,7 @@ function renderMosaic (userimage, req, res) {
 				mosaicimage: utils.wwwdfy(mosaicimage)
 			});
 
-		}, function (err, mosaicimageHQ) {
+		}, function (err, mosaicimageUnderlayOnlyHQ, mosaicimageHQ) {
 			if(err) return utils.sendError(err, res);
 
 			console.log( "HQ version mosaic ready... need to store this somewhere so the user can download it" );

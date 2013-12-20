@@ -82,7 +82,13 @@ function renderMosaic (userimage, doHQ, callback, callbackHQ) {
 		},
 
 		function (mosaicimage, $) {
-			callback(null, mosaicimage);
+
+			// add underlay and overlay:
+			addOverlayAndUnderlay(mosaicimage, $);
+		},
+
+		function (underlay, overlay, $) {
+			callback(null, underlay, overlay);
 
 			if(!doHQ) return $(null, null);
 
@@ -99,9 +105,17 @@ function renderMosaic (userimage, doHQ, callback, callbackHQ) {
 		},
 
 		function (mosaicimageHQ, $) {
-			if(!doHQ) return $(null, null);
+			if(!doHQ) return $(null, null, null);
 
-			callbackHQ(null, mosaicimageHQ);
+			// add underlay and overlay:
+			addOverlayAndUnderlay(mosaicimageHQ, $);
+
+		},
+
+		function (underlay, overlay, $) {
+			if(!doHQ) return $();
+
+			callbackHQ(null, underlay, overlay);
 
 			$();
 		}
@@ -270,7 +284,7 @@ function stitchMosaic (mainimage, usertiles, fileParameter, tempfolder, callback
 
 	var basename = utils.removeFileExt(path.basename(mainimage));
 	var mosaicimage = path.join(ROOTDIR, config.mosaic.folders.output, 'mosaic_'+basename+'.jpg');
-	var mosaicimage_overlayed = path.join(ROOTDIR, config.mosaic.folders.output, 'mosaic_'+basename+'_overlayed.jpg');
+	var mosaicimage_overlayed = path.join(ROOTDIR, config.mosaic.folders.output, 'mosaic_'+basename+'_comp.jpg');
 
 	async.waterfall([
 		function ($) {
@@ -323,7 +337,7 @@ function stitchMosaic2 (mainimage, usertiles, fileParameter, tempfolder, callbac
 
 	var basename = utils.removeFileExt(path.basename(mainimage));
 	var mosaicimage = path.join(ROOTDIR, config.mosaic.folders.output, 'mosaic_'+basename+'.jpg');
-	var mosaicimage_overlayed = path.join(ROOTDIR, config.mosaic.folders.output, 'mosaic_'+basename+'_overlayed.jpg');
+	var mosaicimage_overlayed = path.join(ROOTDIR, config.mosaic.folders.output, 'mosaic_'+basename+'_comp.jpg');
 
 	async.waterfall([
 		function ($) {
@@ -368,6 +382,56 @@ function stitchMosaic2 (mainimage, usertiles, fileParameter, tempfolder, callbac
 		if(err) return callback(err);
 		return callback(null, mosaicimage_overlayed);
 	});
+}
+
+function addOverlayAndUnderlay (inputimage, callback) {
+	var time = Date.now();
+	var basename = utils.removeFileExt(inputimage);
+
+	var outputfileUnderlayOnly = basename + "_underlay.png";
+	var outputfile = basename + "_overlayed.jpg";
+
+	image.addUnderlayOverlay (
+		inputimage,
+		path.join(ROOTDIR, config.mosaic.greetingcard.lowres.underlay),
+		path.join(ROOTDIR, config.mosaic.greetingcard.lowres.overlay),
+		config.mosaic.greetingcard.lowres.offset.x,
+		config.mosaic.greetingcard.lowres.offset.y,
+		outputfileUnderlayOnly,
+		outputfile,
+		function (err) {
+			if(err) return callback(err);
+
+			console.log('> adding overlay and underlay took ' + (Date.now() - time) + ' ms');
+
+			return callback(null, outputfileUnderlayOnly, outputfile);
+		}
+	);
+}
+
+function addOverlayAndUnderlayHQ (inputimage, callback) {
+	var time = Date.now();
+	var basename = utils.removeFileExt(inputimage);
+
+	var outputfileUnderlayOnly = basename + "_underlayhq.jpg";
+	var outputfile = basename + "_overlayedhq.jpg";
+
+	image.addUnderlayOverlay (
+		inputimage,
+		path.join(ROOTDIR, config.mosaic.greetingcard.highres.underlay),
+		path.join(ROOTDIR, config.mosaic.greetingcard.highres.overlay),
+		config.mosaic.greetingcard.highres.offset.x,
+		config.mosaic.greetingcard.highres.offset.y,
+		outputfileUnderlayOnly,
+		outputfile,
+		function (err) {
+			if(err) return callback(err);
+
+			console.log('> adding overlay and underlay took (HQ) ' + (Date.now() - time) + ' ms');
+
+			return callback(null, outputfileUnderlayOnly, outputfile);
+		}
+	);
 }
 
 
