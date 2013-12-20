@@ -45,31 +45,31 @@ async.waterfall([
 	},
 
 	function ($) {
+
+		var counter = 0;
+
 		async.forEachLimit(bootstsrapimages, 10, function (image, $for){
 			var filename = path.basename(image);
 			var basenameNoExt = path.basename(image, path.extname(image));
 
 			var hasTitle = true;
-			if(filename.substr(0,1) == '_')
+			if(filename.substr(0,1) == '_'){
 				hasTitle = false;
-
-			var newBasenameNoExt = basenameNoExt;
-			if(hasTitle){
-				// clean up name:
-				newBasenameNoExt = utils.cleanName(basenameNoExt);
 			}
 
-			var outputfile = path.join( config.mosaic.folders.tiles, 'tile_' + newBasenameNoExt + '.jpg' );
-			var outputfilehq = path.join( config.mosaic.folders.tiles, 'hq_tile_' + newBasenameNoExt + '.jpg' );
+			var outputfile = path.join( config.mosaic.folders.tiles, '' + counter + '.jpg' );
+			var outputfilehq = path.join( config.mosaic.folders.tiles, 'h' + counter + '.jpg' );
 
 			var outputfileflying = null;
 			var outputfileflyingAbsolute = null;
 
 			if(hasTitle)
-				outputfileflying = path.join( config.mosaic.folders.tiles, 'flying_tile_' + newBasenameNoExt + '.jpg' );
+				outputfileflying = path.join( config.mosaic.folders.tiles, 'fly_' + counter + '.jpg' );
 
 			if(outputfileflying)
 				outputfileflyingAbsolute = path.join(ROOTDIR, outputfileflying)
+
+			counter++;
 
 			console.log('> cropping and analyzing: ' + basenameNoExt);
 			cropAndAverageColor(image, path.join(ROOTDIR, outputfile), path.join(ROOTDIR, outputfilehq), outputfileflyingAbsolute, function (err, averageColor){

@@ -78,7 +78,7 @@ function renderMosaic (userimage, doHQ, callback, callbackHQ) {
 			matchedUserTiles = _matchedUserTiles;
 
 			// now stich it:
-			stitchMosaic2(croppedUserImage, matchedUserTiles, 'normalfile', tempfolder, $);
+			stitchMosaic(croppedUserImage, matchedUserTiles, 'normalfile', tempfolder, $);
 		},
 
 		function (mosaicimage, $) {
@@ -95,7 +95,7 @@ function renderMosaic (userimage, doHQ, callback, callbackHQ) {
 
 			croppedUserImageHQ = _croppedUserImageHQ;
 
-			stitchMosaic2(croppedUserImageHQ, matchedUserTiles, 'hqfile', tempfolder, $);
+			stitchMosaic(croppedUserImageHQ, matchedUserTiles, 'hqfile', tempfolder, $);
 		},
 
 		function (mosaicimageHQ, $) {
