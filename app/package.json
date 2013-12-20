@@ -13,6 +13,7 @@
     "printf": "~0.1.2",
     "underscore": "~1.5.2",
     "simple-imagemagick": "*",
-    "mobile-detect": "~0.1.0"
+    "mobile-detect": "~0.1.0",
+    "oauth": "~0.9.10"
   }
 }
