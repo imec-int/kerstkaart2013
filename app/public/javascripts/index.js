@@ -14,7 +14,7 @@ var App = function (options){
 		uploadImage(event.target.files[0], function (data){
 			console.log(data);
 
-			$(".imagecontainer").css('background-image', 'url("'+data.mosaicimage+'")');
+			$(".exampleimage").attr('src', data.mosaicimage);
 		});
 	};
 

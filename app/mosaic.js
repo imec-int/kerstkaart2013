@@ -108,7 +108,7 @@ function renderMosaic (userimage, doHQ, callback, callbackHQ) {
 			if(!doHQ) return $(null, null, null);
 
 			// add underlay and overlay:
-			addOverlayAndUnderlay(mosaicimageHQ, $);
+			addOverlayAndUnderlayHQ(mosaicimageHQ, $);
 
 		},
 
