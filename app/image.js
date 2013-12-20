@@ -30,7 +30,7 @@ function crop (inputfile, width, heigth, outputfile, callback) {
 	});
 }
 
-function readAllPixels (inputfile, width, height, callback) {
+function readAllPixels_old (inputfile, width, height, callback) {
 	// build command
 
 	// convert ninepixels.png -colorspace HSB -format "%[pixel:p{0,1}];%[pixel:p{3}]\n" info:
@@ -61,6 +61,45 @@ function readAllPixels (inputfile, width, height, callback) {
 				h: parseFloat(match[1]),
 				s: parseFloat(match[2]),
 				b: parseFloat(match[3])
+			});
+		};
+		return callback(null, pixels);
+	});
+}
+
+function readAllPixels (inputfile, width, height, callback) {
+	console.log('new readAllPixels');
+	// build command
+
+	// convert ninepixels.png -colorspace HSB -format "%[pixel:p{0,1}];%[pixel:p{3}]\n" info:
+
+	var pixelArrayFormat = [];
+	for (var y = 0; y < height; y++) {
+		for (var x = 0; x < width; x++) {
+			var p = 'p{'+x+','+y+'}';
+			pixelArrayFormat.push('%[fx:'+p+'.r*100];%[fx:'+p+'.g*100];%[fx:'+p+'.b*100]');
+		};
+	};
+
+	im.convert([
+		inputfile,
+		'+repage'     ,
+		'-colorspace' , 'HSB',
+		'-format'     , pixelArrayFormat.join('|'),
+		'info:'
+	], function (err, data){
+		if (err) return callback(err);
+
+		var pixels = [];
+		var dataArray = data.split('|');
+
+		for (var i = 0; i < dataArray.length; i++) {
+			var values = dataArray[i].split(';');
+
+			pixels.push({
+				h: parseFloat(values[0]),
+				s: parseFloat(values[1]),
+				b: parseFloat(values[2])
 			});
 		};
 		return callback(null, pixels);
@@ -113,30 +152,7 @@ function slice (inputfile, width, heigth, outputfiles, callback) {
 	});
 }
 
-function getAverageRGBColor(inputfile, callback){
-	im.convert([
-		inputfile,
-		'+repage'     ,
-		'-colorspace' , 'rgb',
-		'-scale'      , '1x1',
-		'-format'     , '\'%[pixel:u]\'',
-		'info:'
-	], function (err, data){
-		if (err) return callback(err);
-		var rgb = data.replace(/'(.+)'/, '$1');
-		// rgb(198,0,255)
-		var match = rgb.match(/rgb\((.+)?,(.+)?,(.+)?\)/);
-		var rgb = {
-			// string: rgb,
-			r: parseFloat(match[1]),
-			g: parseFloat(match[2]),
-			b: parseFloat(match[3])
-		}
-		return callback(null, rgb);
-	});
-}
-
-function getAverageHSBColor(inputfile, callback){
+function getAverageHSBColor_old(inputfile, callback){
 	im.convert([
 		inputfile,
 		'+repage'     ,
@@ -148,6 +164,8 @@ function getAverageHSBColor(inputfile, callback){
 		if (err) return callback(err);
 		var hsb = data.replace(/'(.+)'/, '$1');
 
+		console.log(hsb);
+
 		var match = hsb.match(/hsb\((.+)?\%,(.+)?\%,(.+)?\%\)/);
 		var hsb = {
 			// string: hsb,
@@ -155,6 +173,30 @@ function getAverageHSBColor(inputfile, callback){
 			s: parseFloat(match[2]),
 			b: parseFloat(match[3])
 		}
+		return callback(null, hsb);
+	});
+}
+
+
+function getAverageHSBColor(inputfile, callback){
+	im.convert([
+		inputfile,
+		'+repage'     ,
+		'-colorspace' , 'HSB',
+		'-scale'      , '1x1',
+		'-format'     , '%[fx:r*100];%[fx:g*100];%[fx:b*100]',
+		'info:'
+	], function (err, data){
+		if (err) return callback(err);
+
+		var values = data.split(';');
+
+		var hsb = {
+			h: parseFloat(values[0]),
+			s: parseFloat(values[1]),
+			b: parseFloat(values[2])
+		};
+
 		return callback(null, hsb);
 	});
 }
@@ -237,7 +279,7 @@ function overlayImages (inputimage1, inputimage2, outputfile, callback){
 exports.autoOrient = autoOrient;
 exports.crop = crop;
 exports.slice = slice;
-exports.getAverageRGBColor = getAverageRGBColor;
+exports.getAverageHSBColor_old = getAverageHSBColor_old;
 exports.getAverageHSBColor = getAverageHSBColor;
 exports.getAverageColor = getAverageColor;
 exports.createSolidImage = createSolidImage;
@@ -247,6 +289,7 @@ exports.overlayImages = overlayImages;
 
 
 exports.resize = resize;
+exports.readAllPixels_old = readAllPixels_old;
 exports.readAllPixels = readAllPixels;
 
 

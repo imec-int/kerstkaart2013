@@ -1,0 +1,13 @@
+Voor 1 pixel:
+
+OUD   : convert els.jpg -colorspace HSB -scale 1x1 -format '%[pixel:u]' info:
+NIEUW : convert els.jpg -colorspace HSB -scale 1x1 -format '%[fx:r*100];%[fx:g*100];%[fx:b*100]' info:
+
+
+Voor meerdere (in voorbeeld 2) pixels:
+
+OUD   : convert els.jpg -colorspace HSB -format '%[pixel:p{0,1}]|%[pixel:p{3,0}]' info:
+NIEUW : convert els.jpg -colorspace HSB -format '%[fx:p{0,1}.r*100];%[fx:p{0,1}.g*100];%[fx:p{0,1}.b*100]|%[fx:p{3,0}.r*100];%[fx:p{3,0}.g*100];%[fx:p{3,0}.b*100]' info:
+
+
+convert els.jpg -colorspace HSB -format '%[pixel:r.p{0,1}*100];%[pixel:p{3,0}]' info:

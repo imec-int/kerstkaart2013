@@ -79,8 +79,7 @@ async.waterfall([
 				var tile = {
 					tile: outputfile,
 					tilehq: outputfilehq,
-					hsb: averageColor.hsb,
-					rgb: averageColor.rgb
+					hsb: averageColor.hsb
 				};
 
 				if(hasTitle){
@@ -126,13 +125,6 @@ function cropAndAverageColor (inputfile, outputfile, outputfilehq, outputfilefly
 		},
 
 		function (imageres, $) {
-
-			// now get the average RGB color for it:
-			image.getAverageRGBColor(outputfile, $);
-		},
-
-		function (rgb, $) {
-			averageColor.rgb = rgb;
 
 			// now get the average RGB color for it:
 			image.getAverageHSBColor(outputfile, $);
