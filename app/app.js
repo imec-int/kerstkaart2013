@@ -115,7 +115,7 @@ app.post('/xhrupload', function (req, res){
 function renderMosaic (userimage, req, res) {
 	// this function has 2 callbacks, one with the normal(lowres) version of the mosaic and one with the highres version of the mosaic
 	// mosaic.renderMosaic( userimage, callback(err, mosaicimage), callbackHQ(err, mosaicimageHQ) )
-	mosaic.renderMosaic( userimage, true,
+	mosaic.renderMosaic( userimage, false,
 		function (err, mosaicimageUnderlayOnly, mosaicimage) {
 			if(err) return utils.sendError(err, res);
 
