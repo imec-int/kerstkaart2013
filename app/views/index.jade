@@ -44,7 +44,7 @@ html
 				img(src='/images/social/twitter-ball-64.png')
 
 			//- FACEBOOK
-			a(href='http://www.facebook.com/sharer/sharer.php?s=100&p[url]=${sharingurl}&p[images][0]=${twitpic}&p[title]=${sharing.title}', target='blank')
+			a(href='http://www.facebook.com/sharer/sharer.php?s=100&p[url]=${sharingurl}&p[images][0]=${absoluteMosaicimage}&p[title]=${sharing.title}', target='blank')
 				img(src='/images/social/fb-ball-64.png')
 
 			//- LINKEDIN
@@ -52,7 +52,7 @@ html
 				img(src='/images/social/linkedin-ball-64.png')
 
 			//- PINTEREST
-			a(href='javascript:void((function()%7Bvar%20e=document.createElement(&apos;script&apos;);e.setAttribute(&apos;type&apos;,&apos;text/javascript&apos;);e.setAttribute(&apos;charset&apos;,&apos;UTF-8&apos;);e.setAttribute(&apos;src&apos;,&apos;http://assets.pinterest.com/js/pinmarklet.js?r=&apos;+Math.random()*99999999);document.body.appendChild(e)%7D)());')
+			a(href='//pinterest.com/pin/create/link/?url=${sharingurl}&media=${absoluteMosaicimage}&description=${sharing.message}', target='blank')
 				img(src='/images/social/pinter-ball-64.png')
 
 
@@ -117,3 +117,5 @@ html
 								canvas#canvas
 
 			.share
+			br
+			br

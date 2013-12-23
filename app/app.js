@@ -206,6 +206,8 @@ function renderMosaic (user, userimage, req, res) {
 	function renderMosaicCallbackHandler (err, mosaicimage, user) {
 		if(err) return utils.sendError(err, res);
 
+		// var testimage = 'http://onlyhdwallpapers.com/wallpaper/room_blocks_fractal_boxes_illusions_rubiks_cube_rubix_desktop_5000x5000_hd-wallpaper-227252.png';
+
 		console.log( "Mosaic ready... sending it back to browser" );
 		console.log( utils.wwwdfy(mosaicimage) );
 		console.log( "Generating twitpic url" );
@@ -218,7 +220,8 @@ function renderMosaic (user, userimage, req, res) {
 				userid: user._id,
 				twitpic: (twiturl)?twiturl: config.sharing.hardcodedUrl + utils.wwwdfy(mosaicimage),
 				sharing: config.sharing,
-				sharingurl: config.sharing.hardcodedUrl  + '/sharable/' + user._id
+				sharingurl: config.sharing.hardcodedUrl  + '/sharable/' + user._id,
+				absoluteMosaicimage: config.sharing.hardcodedUrl + utils.wwwdfy(mosaicimage)
 			});
 		});
 	}
