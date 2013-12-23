@@ -56,11 +56,11 @@ app.get('/fancybg', function (req, res){
 
 		tiles = _.shuffle(tiles); //shuffle the tiles
 
-		tiles = tiles.slice(0, 50); // limit to 50 tiles everywhere
+		tiles = tiles.slice(0, 40); // limit to 50 tiles everywhere
 
 		if( md.mobile() ){
 			console.log('its a mobile');
-			tiles = tiles.slice(0, 20); // limit to 20 tiles on mobile
+			tiles = tiles.slice(0, 16); // limit to 20 tiles on mobile
 		}
 
 		res.render('fancybg', {
@@ -73,7 +73,7 @@ app.get('/fancybg', function (req, res){
 
 app.get('/', function (req, res){
 	var md = new MobileDetect(req.headers['user-agent']);
-	renderView(req, res, false, md.mobile(), false);  // put the first boolean back on 'true' if your really want the fancy bg
+	renderView(req, res, true, md.mobile(), false);  // put the first boolean back on 'true' if your really want the fancy bg
 });
 
 app.get('/simple', function (req, res){
