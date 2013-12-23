@@ -19,7 +19,7 @@ var Upload = function (options){
 	var onFileuploadChange = function (event){
 		// hide the photo button(s):
 		buttonEl.hide();
-		mixpanel.track("fileUpload",{"device":"mobile"});
+		mixpanel.track("Mobile Cam start");
 		// start animation to keep the user busy:
 		options.flyingTiles.letTheTilesFly();
 
@@ -34,7 +34,7 @@ var Upload = function (options){
 			setTimeout(function () {
 				$(".userchristmascard").addClass('visible');
 				Sharing.renderButtons(data);
-				mixpanel.track("fileUpload success",{"device":"mobile", "userid":data.userid});
+				mixpanel.track("Mobile Cam success",{"userid":data.userid});
 				$(".userchristmascard").click(function (event) {
 					// window.location = '/highquality/' + data.userid;
 					window.open('/highquality/' + data.userid);
