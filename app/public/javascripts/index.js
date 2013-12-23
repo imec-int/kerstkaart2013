@@ -5,5 +5,6 @@ $(function(){
 	var upload = new Upload({flyingTiles: flyingTiles});
 	upload.init();
 
-	mixpanel.track("Load complete");
+	// TODO: mixpanel.identify("some email address");
+	mixpanel.track("Page View");
 });
