@@ -68,8 +68,12 @@ html
 	body
 		if fancybg
 			iframe.fancybg(src="/fancybg")
+			script.
+				mixpanel.track("Page View",{"fancybg":true})
 		else
 			.staticbg
+			script.
+				mixpanel.track("Page View",{"fancybg":false})
 
 		.overlay
 			.title

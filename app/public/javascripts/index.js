@@ -11,7 +11,6 @@ $(function(){
 		console.log("mail: "+mail);
 		mixpanel.identify(mail);
 	}
-	mixpanel.track("Page View");
 
 	function urlParam(name){
 	    var results = new RegExp('[\\?&]' + name + '=([^&#]*)').exec(window.location.href);
