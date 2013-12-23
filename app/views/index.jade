@@ -37,7 +37,7 @@ html
 		script#share-template(type="text/x-jquery-tmpl")
 			.share
 				.highqualitylink
-					a(href="/highquality/${userid}", onclick="function(){mixpanel.track('High Quality',{'clickedOn':'link', 'userid':${userid}});})", target="_blank") Hoge kwaliteitsversie
+					a(href="/highquality/${userid}", onclick="mixpanel.track('High Quality',{'clickedOn':'link'});return true;", target="_blank") Hoge kwaliteitsversie
 
 				//- TWITTER
 				a(href='http://twitter.com/home?status=${sharing.message}%20${twitpic}', target='blank')
