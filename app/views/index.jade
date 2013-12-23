@@ -66,8 +66,8 @@ html
 							input(type='file', name='file')
 							br
 							input(type='submit', value='Verstuur')
-						.webcamwrapper
-							.webcam
+						.webcamwrapper(style="width:#{card.width}px")
+							.webcam(style="width:#{card.width}px")
 								video#video
 								.takepicture
 									| Neem foto
