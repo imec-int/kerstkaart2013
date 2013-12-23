@@ -33,19 +33,19 @@ html
 
 		script#share-template(type="text/x-jquery-tmpl")
 			//- GOOGLE PLUS
-			a(href='https://plus.google.com/share?url=${twitpic}')
+			a(href='https://plus.google.com/share?url=${twitpic}', target='blank')
 				img(src='/images/social/g+-ball-64.png')
 
 			//- TWITTER
-			a(href='http://twitter.com/home?status=${sharing.message} ${twitpic}')
+			a(href='http://twitter.com/home?status=${sharing.message}%20${twitpic}', target='blank')
 				img(src='/images/social/twitter-ball-64.png')
 
 			//- FACEBOOK
-			a(href='http://www.facebook.com/sharer/sharer.php?s=100&p[url]=${sharing.url}&p[images][0]=${twitpic}&p[title]=${sharing.title}')
+			a(href='http://www.facebook.com/sharer/sharer.php?s=100&p[url]=${sharing.url}&p[images][0]=${twitpic}&p[title]=${sharing.title}', target='blank')
 				img(src='/images/social/fb-ball-64.png')
 
 			//- LINKEDIN
-			a(href='http://www.linkedin.com/shareArticle?mini=true&url=${twitpic}&title=${sharing.title}')
+			a(href='http://www.linkedin.com/shareArticle?mini=true&url=${twitpic}&title=${sharing.title}', target='blank')
 				img(src='/images/social/linkedin-ball-64.png')
 
 			//- PINTEREST
