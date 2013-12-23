@@ -30,6 +30,9 @@ html
 			script.
 				window.userid = "#{userid}";
 
+		if !fancybg
+			script.
+				window.isSimpleView = true;
 
 		script#share-template(type="text/x-jquery-tmpl")
 			//- GOOGLE PLUS
