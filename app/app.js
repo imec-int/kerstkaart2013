@@ -223,8 +223,9 @@ function renderMosaic (user, userimage, req, res) {
 					res.send({
 						mosaicimage: utils.wwwdfy(mosaicimage),
 						userid: user._id,
-						twitpic: (twiturl)?twiturl:utils.wwwdfy(mosaicimage),
-						sharing: config.sharing
+						twitpic: (twiturl)?twiturl: config.sharing.hardcodedUrl + utils.wwwdfy(mosaicimage),
+						sharing: config.sharing,
+						sharingurl: config.sharing.hardcodedUrl  + '/sharable/' + user._id
 					});
 				});
 
@@ -246,8 +247,9 @@ function renderMosaic (user, userimage, req, res) {
 				res.send({
 					mosaicimage: utils.wwwdfy(mosaicimage),
 					userid: user._id,
-					twitpic: (twiturl)?twiturl:utils.wwwdfy(mosaicimage),
-					sharing: config.sharing
+					twitpic: (twiturl)?twiturl: config.sharing.hardcodedUrl + utils.wwwdfy(mosaicimage),
+					sharing: config.sharing,
+					sharingurl: config.sharing.hardcodedUrl  + '/sharable/' + user._id
 				});
 			});
 
@@ -256,6 +258,8 @@ function renderMosaic (user, userimage, req, res) {
 }
 
 app.get('/highquality/:userid', function (req, res) {
+	if(!req.params.userid) return utils.sendError(new Error('got no user id'), res);
+
 	res.render('highquality', {
 		title: 'Hoge Kwaliteitsversie| MiX Kerstkaart 2013',
 		userid: req.params.userid
@@ -272,7 +276,7 @@ app.post('/api/renderhq', function (req, res) {
 			if(err) return utils.sendError(err, res);
 
 			console.log( "Mosaic HQ ready... sending it back to browser" );
-			console.log(mosaicimageHQ);
+			console.log( mosaicimageHQ );
 			console.log( utils.wwwdfy(mosaicimageHQ) );
 			res.send({
 				mosaicimageHQ: utils.wwwdfy(mosaicimageHQ),
@@ -323,5 +327,20 @@ function getSomeRandomTilesWithPosition(nrOfTiles, callback){
 		callback( null, tiles );
 	});
 }
+
+
+app.get('/sharable/:userid', function (req, res) {
+	if(!req.params.userid) return utils.sendError(new Error('got no user id'), res);
+
+	mongobase.getUser(req.params.userid, function (err, user) {
+		if(err) return utils.sendError(err, res);
+
+		res.render('sharable', {
+			title: '| MiX Kerstkaart 2013',
+			userid: req.params.userid,
+			mosaicimage: utils.wwwdfy(user.finalOverlay)
+		});
+	});
+});
 
 
