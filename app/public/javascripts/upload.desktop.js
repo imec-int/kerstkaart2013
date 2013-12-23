@@ -28,7 +28,6 @@ var Upload = function (options){
 
 		if(!hasWebcam()){
 			// browser doesn't have webcan support, let's remove that button
-			mixpanel.track("noWebcamSupport");
 			webcamButtonEl.hide();
 		}
 
@@ -78,7 +77,6 @@ var Upload = function (options){
 		// hide the photo button:
 		buttonEl.hide();
 
-		mixpanel.track("fileUpload start",{"device":"desktop"});
 		// start animation to keep the user busy:
 		options.flyingTiles.letTheTilesFly();
 
@@ -92,9 +90,7 @@ var Upload = function (options){
 			// show user image after tiles have been flown in:
 			setTimeout(function () {
 				$(".userchristmascard").addClass('visible');
-				mixpanel.track("fileUpload success",{"device":"desktop", "userid":data.userid});
 				$(".userchristmascard").click(function (event) {
-					mixpanel.track("High Quality",{"capture":"fileUpload", "device":"desktop", "userid":data.userid});
 					window.location = '/highquality/' + data.userid;
 				});
 			}, options.flyingTiles.flyingTime);
@@ -143,11 +139,6 @@ var Upload = function (options){
 
 	var onWebcamClick = function (event) {
 		$(".webcamwrapper").show();
-		mixpanel.track("onWebcamClick");
-=======
->>>>>>> 6d2dbc720591cfc017649b9767ec84d8337fc817
-=======
->>>>>>> 6d2dbc720591cfc017649b9767ec84d8337fc817
 		navigator.myGetMedia({ video: true }, onWebcamConnect, onWebcamError);
 	};
 
@@ -157,15 +148,7 @@ var Upload = function (options){
 		var video = $("#video")[0];
 		video.src = window.URL ? window.URL.createObjectURL(stream) : stream;
 		video.play();
-<<<<<<< HEAD
-		mixpanel.track("onWebcamConnect");
-=======
 
-		$(".webcamwrapper").show();
-<<<<<<< HEAD
->>>>>>> 6d2dbc720591cfc017649b9767ec84d8337fc817
-=======
->>>>>>> 6d2dbc720591cfc017649b9767ec84d8337fc817
 		console.log("webcam is playing");
 	};
 
@@ -192,7 +175,6 @@ var Upload = function (options){
 			video.pause();
 		}
 
-		mixpanel.track("onWebcamPicture");
 		// remove webcam div:
 		$(".webcamwrapper").hide();
 
@@ -213,9 +195,7 @@ var Upload = function (options){
 			// show user image after tiles have been flown in:
 			setTimeout(function () {
 				$(".userchristmascard").addClass('visible');
-				mixpanel.track("onWebcamPictureSuccess",{"device":"desktop", "userid":data.userid});
 				$(".userchristmascard").click(function (event) {
-					mixpanel.track("High Quality",{"capture":"webcam", "device":"desktop", "userid":data.userid});
 					window.location = '/highquality/' + data.userid;
 				});
 			}, options.flyingTiles.flyingTime);
