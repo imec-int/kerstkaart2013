@@ -202,58 +202,38 @@ app.post('/api/uploaddataurl', function (req, res) {
 });
 
 function renderMosaic (user, userimage, req, res) {
+
+	function renderMosaicCallbackHandler (err, mosaicimage, user) {
+		if(err) return utils.sendError(err, res);
+
+		console.log( "Mosaic ready... sending it back to browser" );
+		console.log( utils.wwwdfy(mosaicimage) );
+		console.log( "Generating twitpic url" );
+		twitimage.twitPicImage(mosaicimage, function (err, twiturl) {
+
+			// dont check errors
+			// if twitpic failes, the app still works
+			res.send({
+				mosaicimage: utils.wwwdfy(mosaicimage),
+				userid: user._id,
+				twitpic: (twiturl)?twiturl: config.sharing.hardcodedUrl + utils.wwwdfy(mosaicimage),
+				sharing: config.sharing,
+				sharingurl: config.sharing.hardcodedUrl  + '/sharable/' + user._id
+			});
+		});
+	}
+
 	if(!user){
 		var user = {
 			userimage: userimage
 		}
-
 		mongobase.saveUser(user, function (err, user) {
 			if(err) return utils.sendError(err, res);
 
-			mosaic.renderMosaic( user, function (err, mosaicimage, user) {
-				if(err) return utils.sendError(err, res);
-
-				console.log( "Mosaic ready... sending it back to browser" );
-				console.log( utils.wwwdfy(mosaicimage) );
-				console.log( "Generating twitpic url" );
-				twitimage.twitPicImage(mosaicimage, function (err, twiturl) {
-					// dont check errors
-					// if twitpic failes, the app still works
-
-					res.send({
-						mosaicimage: utils.wwwdfy(mosaicimage),
-						userid: user._id,
-						twitpic: (twiturl)?twiturl: config.sharing.hardcodedUrl + utils.wwwdfy(mosaicimage),
-						sharing: config.sharing,
-						sharingurl: config.sharing.hardcodedUrl  + '/sharable/' + user._id
-					});
-				});
-
-
-
-			});
+			mosaic.renderMosaic( renderMosaicCallbackHandler );
 		});
 	}else{
-		mosaic.renderMosaic( user, function (err, mosaicimage, user) {
-			if(err) return utils.sendError(err, res);
-
-			console.log( "Mosaic ready... sending it back to browser" );
-			console.log( utils.wwwdfy(mosaicimage) );
-			console.log( "Generating twitpic url" );
-			twitimage.twitPicImage(mosaicimage, function (err, twiturl) {
-				// dont check errors
-				// if twitpic failes, the app still works
-
-				res.send({
-					mosaicimage: utils.wwwdfy(mosaicimage),
-					userid: user._id,
-					twitpic: (twiturl)?twiturl: config.sharing.hardcodedUrl + utils.wwwdfy(mosaicimage),
-					sharing: config.sharing,
-					sharingurl: config.sharing.hardcodedUrl  + '/sharable/' + user._id
-				});
-			});
-
-		});
+		mosaic.renderMosaic( renderMosaicCallbackHandler );
 	}
 }
 
