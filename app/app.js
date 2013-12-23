@@ -230,10 +230,10 @@ function renderMosaic (user, userimage, req, res) {
 		mongobase.saveUser(user, function (err, user) {
 			if(err) return utils.sendError(err, res);
 
-			mosaic.renderMosaic( renderMosaicCallbackHandler );
+			mosaic.renderMosaic( user, renderMosaicCallbackHandler );
 		});
 	}else{
-		mosaic.renderMosaic( renderMosaicCallbackHandler );
+		mosaic.renderMosaic( user, renderMosaicCallbackHandler );
 	}
 }
 
