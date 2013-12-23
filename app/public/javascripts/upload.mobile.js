@@ -10,6 +10,7 @@ var Upload = function (options){
 
 		if(!hasFileUploadApi){
 			// inform the user he has no file upload capabilities:
+			mixpanel.track("noFileUploadSupport");
 			alert(userHasNoFileUploadMsg);
 		}
 	};
@@ -18,7 +19,7 @@ var Upload = function (options){
 	var onFileuploadChange = function (event){
 		// hide the photo button(s):
 		buttonEl.hide();
-
+		mixpanel.track("fileUpload",{"device":"mobile"});
 		// start animation to keep the user busy:
 		options.flyingTiles.letTheTilesFly();
 
@@ -32,6 +33,7 @@ var Upload = function (options){
 			// show user image after tiles have been flown in:
 			setTimeout(function () {
 				$(".userchristmascard").addClass('visible');
+				mixpanel.track("fileUpload success",{"device":"mobile", "userid":data.userid});
 				$(".userchristmascard").click(function (event) {
 					window.location = '/highquality/' + data.userid;
 				});
