@@ -36,7 +36,8 @@ var Upload = function (options){
 				Sharing.renderButtons(data);
 				mixpanel.track("fileUpload success",{"device":"mobile", "userid":data.userid});
 				$(".userchristmascard").click(function (event) {
-					window.location = '/highquality/' + data.userid;
+					// window.location = '/highquality/' + data.userid;
+					window.open('/highquality/' + data.userid);
 				});
 			}, options.flyingTiles.flyingTime);
 		});

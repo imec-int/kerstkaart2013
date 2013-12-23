@@ -96,7 +96,8 @@ var Upload = function (options){
 				Sharing.renderButtons(data);
 				mixpanel.track("fileUpload success",{"device":"desktop", "userid":data.userid});
 				$(".userchristmascard").click(function (event) {
-					window.location = '/highquality/' + data.userid;
+					// window.location = '/highquality/' + data.userid;
+					window.open('/highquality/' + data.userid);
 				});
 			}, options.flyingTiles.flyingTime);
 		});
@@ -207,7 +208,8 @@ var Upload = function (options){
 				mixpanel.track("onWebcamPictureSuccess",{"device":"desktop", "userid":data.userid});
 				$(".userchristmascard").click(function (event) {
 					mixpanel.track("High Quality",{"capture":"webcam", "device":"desktop", "userid":data.userid});
-					window.location = '/highquality/' + data.userid;
+					// window.location = '/highquality/' + data.userid;
+					window.open('/highquality/' + data.userid);
 				});
 			}, options.flyingTiles.flyingTime);
 		})
