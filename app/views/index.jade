@@ -36,10 +36,6 @@ html
 
 		script#share-template(type="text/x-jquery-tmpl")
 			.share
-				//- GOOGLE PLUS
-				a(href='https://plus.google.com/share?url=${sharing.sharebleUrl}', target='blank')
-					img(src='/images/social/g+-ball-64.png')
-
 				//- TWITTER
 				a(href='http://twitter.com/home?status=${sharing.message}%20${twitpic}', target='blank')
 					img(src='/images/social/twitter-ball-64.png')
@@ -47,6 +43,10 @@ html
 				//- FACEBOOK
 				a(href='http://www.facebook.com/sharer.php?u=${sharing.sharebleUrl}', target='blank')
 					img(src='/images/social/fb-ball-64.png')
+
+				//- GOOGLE PLUS
+				a(href='https://plus.google.com/share?url=${sharing.sharebleUrl}', target='blank')
+					img(src='/images/social/g+-ball-64.png')
 
 				//- LINKEDIN
 				a(href='http://www.linkedin.com/shareArticle?mini=true&url=${sharing.sharebleUrl}&title=${sharing.title}', target='blank')
