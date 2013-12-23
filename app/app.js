@@ -324,7 +324,6 @@ function getSomeRandomTilesWithPosition(nrOfTiles, callback){
 	});
 }
 
-
 // YOUNES stuff:
 
 app.get('/share', function(req, res){
