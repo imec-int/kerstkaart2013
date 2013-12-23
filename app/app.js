@@ -214,6 +214,7 @@ function renderMosaic (user, userimage, req, res) {
 
 				console.log( "Mosaic ready... sending it back to browser" );
 				console.log( utils.wwwdfy(mosaicimage) );
+				console.log('TROLOLOLOOL ' + mosaicimage);
 				res.send({
 					mosaicimage: utils.wwwdfy(mosaicimage),
 					userid: user._id
