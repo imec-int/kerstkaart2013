@@ -1,6 +1,12 @@
 doctype html5
 html
 	head
+		//- Facebook meta tags:
+		meta(property="og:image" content="#{sharing.imageUrl}")
+		meta(property="og:title" content="#{sharing.message}")
+		meta(property="og:url" content="#{sharing.sharebleUrl}")
+		meta(property="og:site_name" content="#{sharing.title}")
+
 		meta(name='viewport', content='initial-scale=1.0, user-scalable=no')
 		title= title
 		link(href='http://fonts.googleapis.com/css?family=Alegreya+SC:400,700,400italic,700italic,900,900italic', rel='stylesheet', type='text/css')

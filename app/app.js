@@ -328,11 +328,17 @@ app.get('/sharable/:userid', function (req, res) {
 	mongobase.getUser(req.params.userid, function (err, user) {
 		if(err) return utils.sendError(err, res);
 
-		res.render('sharable', {
-			title: '| MiX Kerstkaart 2013',
+		var responseObject = {
+			title: config.sharing.message +  ' | MiX Kerstkaart 2013',
 			userid: req.params.userid,
 			mosaicimage: utils.wwwdfy(user.finalOverlay)
-		});
+		}
+
+		responseObject.sharing = config.sharing;
+		responseObject.sharing.imageUrl = config.sharing.hardcodedUrl + utils.wwwdfy(user.finalOverlay);
+		responseObject.sharing.sharebleUrl = config.sharing.hardcodedUrl + '/sharable/' + user._id;
+
+		res.render('sharable', responseObject);
 	});
 });
 
