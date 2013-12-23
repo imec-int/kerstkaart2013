@@ -247,22 +247,32 @@ app.get('/highquality/:userid', function (req, res) {
 });
 
 app.post('/api/renderhq', function (req, res) {
+	function respondToBrowser (user) {
+		console.log( user.finalOverlayHQ );
+		console.log( utils.wwwdfy(user.finalOverlayHQ) );
+		res.send({
+			mosaicimageHQ: utils.wwwdfy(user.finalOverlayHQ),
+			userid: user._id
+		});
+	}
+
 	if(!req.body.userid) return utils.sendError(new Error('got no user id'), res);
 
 	mongobase.getUser( req.body.userid, function (err, user) {
 		if(err) return utils.sendError(err, res);
 
+		// check if HQ is not already rendered:
+		if(user.finalOverlayHQ){
+			console.log( "Mosaic HQ already done... sending it back to browser" );
+
+			respondToBrowser(user);
+		}
+
 		mosaic.renderMosaicHQ( user, function (err, mosaicimageHQ, user) {
 			if(err) return utils.sendError(err, res);
-
 			console.log( "Mosaic HQ ready... sending it back to browser" );
-			console.log( mosaicimageHQ );
-			console.log( utils.wwwdfy(mosaicimageHQ) );
-			res.send({
-				mosaicimageHQ: utils.wwwdfy(mosaicimageHQ),
-				userid: user._id
-			});
 
+			respondToBrowser(user);
 		});
 	});
 });
