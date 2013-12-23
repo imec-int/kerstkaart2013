@@ -265,15 +265,15 @@ app.post('/api/renderhq', function (req, res) {
 		if(user.finalOverlayHQ){
 			console.log( "Mosaic HQ already done... sending it back to browser" );
 
-			respondToBrowser(user);
+			return respondToBrowser(user);
+		}else{
+			mosaic.renderMosaicHQ( user, function (err, mosaicimageHQ, user) {
+				if(err) return utils.sendError(err, res);
+				console.log( "Mosaic HQ ready... sending it back to browser" );
+
+				respondToBrowser(user);
+			});
 		}
-
-		mosaic.renderMosaicHQ( user, function (err, mosaicimageHQ, user) {
-			if(err) return utils.sendError(err, res);
-			console.log( "Mosaic HQ ready... sending it back to browser" );
-
-			respondToBrowser(user);
-		});
 	});
 });
 
