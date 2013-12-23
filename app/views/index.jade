@@ -36,6 +36,9 @@ html
 
 		script#share-template(type="text/x-jquery-tmpl")
 			.share
+				.highqualitylink
+					a(href="/highquality/${userid}", target="_blank") Hoge kwaliteitsversie
+
 				//- TWITTER
 				a(href='http://twitter.com/home?status=${sharing.message}%20${twitpic}', target='blank')
 					img(src='/images/social/twitter-ball-64.png')
@@ -55,6 +58,8 @@ html
 				//- PINTEREST
 				a(href='//pinterest.com/pin/create/link/?url=${sharing.sharebleUrl}&media=${sharing.imageUrl}&description=${sharing.messageNoHash}', target='blank')
 					img(src='/images/social/pinter-ball-64.png')
+
+
 
 
 		script.
