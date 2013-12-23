@@ -8,12 +8,14 @@ html
 
 		link(rel='stylesheet', href="/stylesheets/style.css")
 		script(type='text/javascript', src='//code.jquery.com/jquery.min.js')
-		script(type='text/javascript', src='/vendor/modernizr.custo	m.13282.js')
+		script(type='text/javascript', src='/vendor/jquery.tmpl.min.js')
+		script(type='text/javascript', src='/vendor/modernizr.custom.13282.js')
 		script(type='text/javascript', src='/javascripts/flyingtiles.js')
 		if mobile
 			script(type='text/javascript', src='/javascripts/upload.mobile.js')
 		else
 			script(type='text/javascript', src='/javascripts/upload.desktop.js')
+		script(type='text/javascript', src='/javascripts/sharing.js')
 		script(type='text/javascript', src='/javascripts/index.js')
 
 		if fancybg
@@ -28,8 +30,32 @@ html
 			script.
 				window.userid = "#{userid}";
 
+
+		script#share-template(type="text/x-jquery-tmpl")
+			//- GOOGLE PLUS
+			a(href='https://plus.google.com/share?url=${twitpic}')
+				img(src='/images/social/g+-ball-64.png')
+
+			//- TWITTER
+			a(href='http://twitter.com/home?status=${sharing.message} ${twitpic}')
+				img(src='/images/social/twitter-ball-64.png')
+
+			//- FACEBOOK
+			a(href='http://www.facebook.com/sharer/sharer.php?s=100&p[url]=${sharing.url}&p[images][0]=${twitpic}&p[title]=${sharing.title}')
+				img(src='/images/social/fb-ball-64.png')
+
+			//- LINKEDIN
+			a(href='http://www.linkedin.com/shareArticle?mini=true&url=${twitpic}&title=${sharing.title}')
+				img(src='/images/social/linkedin-ball-64.png')
+
+			//- PINTEREST
+			a(href='javascript:void((function()%7Bvar%20e=document.createElement(&apos;script&apos;);e.setAttribute(&apos;type&apos;,&apos;text/javascript&apos;);e.setAttribute(&apos;charset&apos;,&apos;UTF-8&apos;);e.setAttribute(&apos;src&apos;,&apos;http://assets.pinterest.com/js/pinmarklet.js?r=&apos;+Math.random()*99999999);document.body.appendChild(e)%7D)());')
+				img(src='/images/social/pinter-ball-64.png')
+
+
 		script.
 			(function(e,b){if(!b.__SV){var a,f,i,g;window.mixpanel=b;a=e.createElement("script");a.type="text/javascript";a.async=!0;a.src=("https:"===e.location.protocol?"https:":"http:")+'//cdn.mxpnl.com/libs/mixpanel-2.2.min.js';f=e.getElementsByTagName("script")[0];f.parentNode.insertBefore(a,f);b._i=[];b.init=function(a,e,d){function f(b,h){var a=h.split(".");2==a.length&&(b=b[a[0]],h=a[1]);b[h]=function(){b.push([h].concat(Array.prototype.slice.call(arguments,0)))}}var c=b;"undefined"!==typeof d?c=b[d]=[]:d="mixpanel";c.people=c.people||[];c.toString=function(b){var a="mixpanel";"mixpanel"!==d&&(a+="."+d);b||(a+=" (stub)");return a};c.people.toString=function(){return c.toString(1)+".people (stub)"};i="disable track track_pageview track_links track_forms register register_once alias unregister identify name_tag set_config people.set people.set_once people.increment people.append people.track_charge people.clear_charges people.delete_user".split(" ");for(g=0;g<i.length;g++)f(c,i[g]);b._i.push([a,e,d])};b.__SV=1.2}})(document,window.mixpanel||[]);mixpanel.init("b95e9bf0eaeb9de749e6e3be5ac85c50");
+
 	body
 		if fancybg
 			iframe.fancybg(src="/fancybg")
@@ -75,24 +101,3 @@ html
 								canvas#canvas
 
 			.share
-				//- GOOGLE PLUS
-				a(href='https://plus.google.com/share?url=#{imgUrl}')
-					img(src='/images/social/g+-ball-64.png')
-
-				//- TWITTER
-				a(href='http://twitter.com/home?status=#{message}#{imgUrl}')
-					img(src='/images/social/twitter-ball-64.png')
-
-				//- FACEBOOK
-				a(href='http://www.facebook.com/sharer/sharer.php?s=100&p[url]=#{pageUrl}&p[images][0]=#{imgUrl}&p[title]=#{title}')
-					img(src='/images/social/fb-ball-64.png')
-
-				//- LINKEDIN
-				a(href='http://www.linkedin.com/shareArticle?mini=true&url=#{imgUrl}&title=#{title}')
-					img(src='/images/social/linkedin-ball-64.png')
-
-				//- PINTEREST
-				<a href='javascript:void((function()%7Bvar%20e=document.createElement(&apos;script&apos;);e.setAttribute(&apos;type&apos;,&apos;text/javascript&apos;);e.setAttribute(&apos;charset&apos;,&apos;UTF-8&apos;);e.setAttribute(&apos;src&apos;,&apos;http://assets.pinterest.com/js/pinmarklet.js?r=&apos;+Math.random()*99999999);document.body.appendChild(e)%7D)());'>
-
-				img(src='/images/social/pinter-ball-64.png')
-

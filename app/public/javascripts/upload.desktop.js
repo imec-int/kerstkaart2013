@@ -64,6 +64,7 @@ var Upload = function (options){
 				// show user image after tiles have been flown in:
 				setTimeout(function () {
 					$(".userchristmascard").addClass('visible');
+					Sharing.renderButtons(data);
 					$(".userchristmascard").click(function (event) {
 						window.location = '/highquality/' + data.userid;
 					});
@@ -92,6 +93,7 @@ var Upload = function (options){
 			// show user image after tiles have been flown in:
 			setTimeout(function () {
 				$(".userchristmascard").addClass('visible');
+				Sharing.renderButtons(data);
 				mixpanel.track("fileUpload success",{"device":"desktop", "userid":data.userid});
 				$(".userchristmascard").click(function (event) {
 					window.location = '/highquality/' + data.userid;
@@ -201,6 +203,7 @@ var Upload = function (options){
 			// show user image after tiles have been flown in:
 			setTimeout(function () {
 				$(".userchristmascard").addClass('visible');
+				Sharing.renderButtons(data);
 				mixpanel.track("onWebcamPictureSuccess",{"device":"desktop", "userid":data.userid});
 				$(".userchristmascard").click(function (event) {
 					mixpanel.track("High Quality",{"capture":"webcam", "device":"desktop", "userid":data.userid});

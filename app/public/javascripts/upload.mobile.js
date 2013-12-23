@@ -33,6 +33,7 @@ var Upload = function (options){
 			// show user image after tiles have been flown in:
 			setTimeout(function () {
 				$(".userchristmascard").addClass('visible');
+				Sharing.renderButtons(data);
 				mixpanel.track("fileUpload success",{"device":"mobile", "userid":data.userid});
 				$(".userchristmascard").click(function (event) {
 					window.location = '/highquality/' + data.userid;

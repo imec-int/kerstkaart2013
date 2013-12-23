@@ -12,6 +12,7 @@ var config = require('./config');
 var mosaic = require('./mosaic');
 var mongobase = require('./mongobase');
 var utils = require('./utils');
+var twitimage = require('./twitimage');
 
 var ROOTDIR = path.join(__dirname, config.mosaic.folders.root);
 
@@ -214,10 +215,20 @@ function renderMosaic (user, userimage, req, res) {
 
 				console.log( "Mosaic ready... sending it back to browser" );
 				console.log( utils.wwwdfy(mosaicimage) );
-				res.send({
-					mosaicimage: utils.wwwdfy(mosaicimage),
-					userid: user._id
+				console.log( "Generating twitpic url" );
+				twitimage.twitPicImage(mosaicimage, function (err, twiturl) {
+					// dont check errors
+					// if twitpic failes, the app still works
+
+					res.send({
+						mosaicimage: utils.wwwdfy(mosaicimage),
+						userid: user._id,
+						twitpic: (twiturl)?twiturl:utils.wwwdfy(mosaicimage),
+						sharing: config.sharing
+					});
 				});
+
+
 
 			});
 		});
@@ -227,9 +238,17 @@ function renderMosaic (user, userimage, req, res) {
 
 			console.log( "Mosaic ready... sending it back to browser" );
 			console.log( utils.wwwdfy(mosaicimage) );
-			res.send({
-				mosaicimage: utils.wwwdfy(mosaicimage),
-				userid: user._id
+			console.log( "Generating twitpic url" );
+			twitimage.twitPicImage(mosaicimage, function (err, twiturl) {
+				// dont check errors
+				// if twitpic failes, the app still works
+
+				res.send({
+					mosaicimage: utils.wwwdfy(mosaicimage),
+					userid: user._id,
+					twitpic: (twiturl)?twiturl:utils.wwwdfy(mosaicimage),
+					sharing: config.sharing
+				});
 			});
 
 		});
