@@ -43,7 +43,7 @@ html
 			.cardwrapper(style="width:#{card.width}px; height:#{card.height}px")
 				img.christmascard(src="/images/example.png", data-width="#{card.width}", data-height="#{card.height}", data-mosaic-offset-x="#{card.mosaicOffsetX}", data-mosaic-offset-y="#{card.mosaicOffsetY}")
 				each tile in tiles
-					img.faketile(src="#{tile.image}", title="#{tile.title}" data-top="#{tile.top}", data-left="#{tile.left}", data-size="#{tile.size}", data-maxsize="#{tile.maxsize}")
+					//- img.faketile(src="#{tile.image}", title="#{tile.title}" data-top="#{tile.top}", data-left="#{tile.left}", data-size="#{tile.size}", data-maxsize="#{tile.maxsize}")
 				img.userchristmascard(title="Klik om de hoge kwaliteitsversie te laden")
 
 				.buttons
