@@ -35,25 +35,26 @@ html
 				window.isSimpleView = true;
 
 		script#share-template(type="text/x-jquery-tmpl")
-			//- GOOGLE PLUS
-			a(href='https://plus.google.com/share?url=${twitpic}', target='blank')
-				img(src='/images/social/g+-ball-64.png')
+			.share
+				//- GOOGLE PLUS
+				a(href='https://plus.google.com/share?url=${twitpic}', target='blank')
+					img(src='/images/social/g+-ball-64.png')
 
-			//- TWITTER
-			a(href='http://twitter.com/home?status=${sharing.message}%20${twitpic}', target='blank')
-				img(src='/images/social/twitter-ball-64.png')
+				//- TWITTER
+				a(href='http://twitter.com/home?status=${sharing.message}%20${twitpic}', target='blank')
+					img(src='/images/social/twitter-ball-64.png')
 
-			//- FACEBOOK
-			a(href='http://www.facebook.com/sharer.php?u=${sharingurl}', target='blank')
-				img(src='/images/social/fb-ball-64.png')
+				//- FACEBOOK
+				a(href='http://www.facebook.com/sharer.php?u=${sharingurl}', target='blank')
+					img(src='/images/social/fb-ball-64.png')
 
-			//- LINKEDIN
-			a(href='http://www.linkedin.com/shareArticle?mini=true&url=${twitpic}&title=${sharing.title}', target='blank')
-				img(src='/images/social/linkedin-ball-64.png')
+				//- LINKEDIN
+				a(href='http://www.linkedin.com/shareArticle?mini=true&url=${twitpic}&title=${sharing.title}', target='blank')
+					img(src='/images/social/linkedin-ball-64.png')
 
-			//- PINTEREST
-			a(href='//pinterest.com/pin/create/link/?url=${sharingurl}&media=${absoluteMosaicimage}&description=${sharing.message}', target='blank')
-				img(src='/images/social/pinter-ball-64.png')
+				//- PINTEREST
+				a(href='//pinterest.com/pin/create/link/?url=${sharingurl}&media=${absoluteMosaicimage}&description=${sharing.message}', target='blank')
+					img(src='/images/social/pinter-ball-64.png')
 
 
 		script.
@@ -118,6 +119,7 @@ html
 									| Neem foto
 								canvas#canvas
 
-			.share
+			.sharewrapper
+
 			br
 			br
