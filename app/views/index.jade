@@ -37,7 +37,7 @@ html
 		script#share-template(type="text/x-jquery-tmpl")
 			.share
 				//- GOOGLE PLUS
-				a(href='https://plus.google.com/share?url=${sharingurl}', target='blank')
+				a(href='https://plus.google.com/share?url=${sharing.sharebleUrl}', target='blank')
 					img(src='/images/social/g+-ball-64.png')
 
 				//- TWITTER
@@ -45,15 +45,15 @@ html
 					img(src='/images/social/twitter-ball-64.png')
 
 				//- FACEBOOK
-				a(href='http://www.facebook.com/sharer.php?u=${sharingurl}', target='blank')
+				a(href='http://www.facebook.com/sharer.php?u=${sharing.sharebleUrl}', target='blank')
 					img(src='/images/social/fb-ball-64.png')
 
 				//- LINKEDIN
-				a(href='http://www.linkedin.com/shareArticle?mini=true&url=${sharingurl}&title=${sharing.title}', target='blank')
+				a(href='http://www.linkedin.com/shareArticle?mini=true&url=${sharing.sharebleUrl}&title=${sharing.title}', target='blank')
 					img(src='/images/social/linkedin-ball-64.png')
 
 				//- PINTEREST
-				a(href='//pinterest.com/pin/create/link/?url=${sharingurl}&media=${absoluteMosaicimage}&description=${sharing.messageNoHash}', target='blank')
+				a(href='//pinterest.com/pin/create/link/?url=${sharing.sharebleUrl}&media=${sharing.imageUrl}&description=${sharing.messageNoHash}', target='blank')
 					img(src='/images/social/pinter-ball-64.png')
 
 
