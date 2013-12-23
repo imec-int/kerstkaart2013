@@ -27,6 +27,7 @@ var Upload = function (options){
 		oldFashionedUploadButtons.hide();
 
 		if(!hasWebcam()){
+			mixpanel.track("noWebcamSupport");
 			// browser doesn't have webcan support, let's remove that button
 			webcamButtonEl.hide();
 		}
@@ -76,6 +77,7 @@ var Upload = function (options){
 	var onFileuploadChange = function (event){
 		// hide the photo button:
 		buttonEl.hide();
+		mixpanel.track("fileUpload start",{"device":"desktop"});
 
 		// start animation to keep the user busy:
 		options.flyingTiles.letTheTilesFly();
@@ -90,6 +92,7 @@ var Upload = function (options){
 			// show user image after tiles have been flown in:
 			setTimeout(function () {
 				$(".userchristmascard").addClass('visible');
+				mixpanel.track("fileUpload success",{"device":"desktop", "userid":data.userid});
 				$(".userchristmascard").click(function (event) {
 					window.location = '/highquality/' + data.userid;
 				});
@@ -138,6 +141,7 @@ var Upload = function (options){
 	};
 
 	var onWebcamClick = function (event) {
+		mixpanel.track("onWebcamClick");
 		navigator.myGetMedia({ video: true }, onWebcamConnect, onWebcamError);
 	};
 
@@ -147,6 +151,7 @@ var Upload = function (options){
 		var video = $("#video")[0];
 		video.src = window.URL ? window.URL.createObjectURL(stream) : stream;
 		video.play();
+		mixpanel.track("onWebcamConnect");
 
 		$(".webcamwrapper").show();
 		console.log("webcam is playing");
@@ -174,6 +179,7 @@ var Upload = function (options){
 			stream = null;
 			video.pause();
 		}
+		mixpanel.track("onWebcamPicture");
 
 		// remove webcam div:
 		$(".webcamwrapper").hide();
@@ -195,7 +201,9 @@ var Upload = function (options){
 			// show user image after tiles have been flown in:
 			setTimeout(function () {
 				$(".userchristmascard").addClass('visible');
+				mixpanel.track("onWebcamPictureSuccess",{"device":"desktop", "userid":data.userid});
 				$(".userchristmascard").click(function (event) {
+					mixpanel.track("High Quality",{"capture":"webcam", "device":"desktop", "userid":data.userid});
 					window.location = '/highquality/' + data.userid;
 				});
 			}, options.flyingTiles.flyingTime);
