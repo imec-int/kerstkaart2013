@@ -263,6 +263,7 @@ function overlayImages (inputimage1, inputimage2, outputfile, callback){
 	// composite -compose Multiply -gravity center img1.png img2 compose_multiply.png
 
 	im.composite([
+		'+repage'    ,
 		'-compose'   , 'Multiply',
 		'-gravity'   , 'center',
 		inputimage1,
@@ -275,29 +276,43 @@ function overlayImages (inputimage1, inputimage2, outputfile, callback){
 }
 
 
-function addUnderlayOverlay (inputfile, underlay, overlay, offsetX, offsetY, outputfileUnderlayOnly, outputfile, callback) {
-	// composite -geometry +60+105 testmosaic.jpg underlay.png test.png
-	// composite overlay.png test.png test.png
-
+function addOverlay (inputfile, overlay, offsetX, offsetY, outputfile, callback) {
 	async.waterfall([
 		function ($) {
-			im.composite([
-				'-geometry'   , '+'+offsetX+'+'+offsetY,
+			// get width and height of overlay:
+			im.identify(overlay, $)
+		},
+
+		function (imagedata, $) {
+			// convert rose: -extent -background none 600x600-4-50\!  crop_vp_all.gif
+
+			// put it in a larger canvas (size of the overlay):
+			im.convert([
 				inputfile,
-				underlay,
-				outputfileUnderlayOnly
+				'+repage'  ,
+				'-background' , 'none',
+				'-extent'     , imagedata.width+'x'+imagedata.height+'-'+offsetX+'-'+offsetY+'\!',
+				outputfile
 			], $);
 		},
 
 		function (stdout, stderr, $) {
+			// overlay it with overlay:
 			im.composite([
 				overlay,
-				outputfileUnderlayOnly,
+				outputfile,
 				outputfile
 			], $);
 		}
 
 	], callback);
+}
+
+function getImageSize (inputfile, callback) {
+	im.identify(overlay, function (err, data) {
+		if(err) return callback(err);
+		return callback(null, data);
+	});
 }
 
 exports.autoOrient = autoOrient;
@@ -316,7 +331,8 @@ exports.resize = resize;
 exports.readAllPixels_old = readAllPixels_old;
 exports.readAllPixels = readAllPixels;
 
-exports.addUnderlayOverlay = addUnderlayOverlay;
+exports.addOverlay = addOverlay;
+exports.getImageSize = getImageSize;
 
 
 

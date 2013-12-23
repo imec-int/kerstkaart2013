@@ -109,19 +109,19 @@ function cropAndAverageColor (inputfile, outputfile, outputfilehq, outputfilefly
 	async.waterfall([
 		function ($) {
 			// crop to tile size:
-			image.crop(inputfile, config.mosaic.tile.width, config.mosaic.tile.height, outputfile, $);
+			image.crop(inputfile, config.mosaic.tile.size, config.mosaic.tile.size, outputfile, $);
 		},
 
 		function (imageres, $) {
 			// crop to tile hq size:
-			image.crop(inputfile, config.mosaic.tilehq.width, config.mosaic.tilehq.height, outputfilehq, $);
+			image.crop(inputfile, config.mosaic.tilehq.size, config.mosaic.tilehq.size, outputfilehq, $);
 		},
 
 		function (imageres, $) {
 			if(!outputfileflying) return $(null, null);
 
 			// crop to flying tile size:
-			image.crop(inputfile, config.mosaic.flyingtile.width, config.mosaic.flyingtile.height, outputfileflying, $);
+			image.crop(inputfile, config.mosaic.flyingtile.size, config.mosaic.flyingtile.size, outputfileflying, $);
 		},
 
 		function (imageres, $) {

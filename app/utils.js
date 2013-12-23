@@ -16,12 +16,12 @@ function getTilesInfo () {
 	var tilesWide = Math.round( config.mosaic.maxtiles / tilesHeigh );
 
 	// width and height the image should be, based on the number of tiles and tile size:
-	var width = tilesWide * config.mosaic.tile.width;
-	var height = tilesHeigh * config.mosaic.tile.height;
+	var width = tilesWide * config.mosaic.tile.size;
+	var height = tilesHeigh * config.mosaic.tile.size;
 
 	// width and height the HQ image should be, based on the number of tiles and hq tile size:
-	var widthHQ = tilesWide * config.mosaic.tilehq.width;
-	var heightHQ = tilesHeigh * config.mosaic.tilehq.height;
+	var widthHQ = tilesWide * config.mosaic.tilehq.size;
+	var heightHQ = tilesHeigh * config.mosaic.tilehq.size;
 
 	return {
 		heigh   : tilesHeigh,
@@ -34,19 +34,20 @@ function getTilesInfo () {
 	};
 }
 
-function getXY (tileIndex, callback) {
-	// body...
-	mongobase.getConfig(function (err, config){
-		if(err) return callback(err);
+function getTilePosition (tileIndex) {
+	var tilesinfo = getTilesInfo();
+	var x = tileIndex%tilesinfo.wide;
+	var y = (tileIndex-x)/tilesinfo.wide;
 
-		var x = tileIndex%config.tilesWide;
-		var y = (tileIndex-x)/config.tilesWide;
+	var x_px = x * config.mosaic.tile.size;
+	var y_px = y * config.mosaic.tile.size;
 
-		return callback(null, {
-			x: x,
-			y: y
-		});
-	});
+	return {
+		x: x,
+		y: y,
+		x_px: x_px,
+		y_px: y_px
+	}
 }
 
 function cleanFolder (folder, callback) {
@@ -125,7 +126,7 @@ var cleanName = function(name) {
 exports.getTilesInfo = getTilesInfo;
 exports.removeFileExt = removeFileExt;
 
-exports.getXY = getXY;
+exports.getTilePosition = getTilePosition;
 exports.cleanFolder = cleanFolder;
 exports.wwwdfy = wwwdfy;
 exports.sendError = sendError;

@@ -5,9 +5,11 @@ var l = void 0,
 	da, C;
 
 function ea(c, k) {
-	var j, f, h, e, a, b, d, g, x, q = k && k.split("/"),
-		t = I.map,
-		F = t && t["*"] || {};
+	var j, f, h, e, a, b, d, g, x;
+	var q = k && k.split("/");
+	var t = I.map;
+	var F = t && t["*"] || {};
+
 	if (c && "." === c.charAt(0) && k) {
 		q = q.slice(0, q.length - 1);
 		c = q.concat(c.split("/"));
@@ -435,8 +437,7 @@ C("0/9", ["require", "exports", "module"], function (c, k, j) {
 			d[4] = a[4] * b[0] + a[5] * b[4] + a[6] * b[8] + a[7] * b[12];
 			d[5] = a[4] * b[1] + a[5] * b[5] + a[6] * b[9] + a[7] * b[13];
 			d[6] = a[4] * b[2] + a[5] * b[6] + a[6] * b[10] + a[7] * b[14];
-			d[7] =
-				a[4] * b[3] + a[5] * b[7] + a[6] * b[11] + a[7] * b[15];
+			d[7] = a[4] * b[3] + a[5] * b[7] + a[6] * b[11] + a[7] * b[15];
 			d[8] = a[8] * b[0] + a[9] * b[4] + a[10] * b[8] + a[11] * b[12];
 			d[9] = a[8] * b[1] + a[9] * b[5] + a[10] * b[9] + a[11] * b[13];
 			d[10] = a[8] * b[2] + a[9] * b[6] + a[10] * b[10] + a[11] * b[14];

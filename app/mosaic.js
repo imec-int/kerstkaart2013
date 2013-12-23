@@ -10,16 +10,18 @@ var printf = require('printf');
 
 var ROOTDIR = path.join(__dirname, config.mosaic.folders.root);
 
-function renderMosaic (userimage, doHQ, callback, callbackHQ) {
-	var orientedImage, croppedUserImage, userTiles, matchedTiles, croppedUserImageHQ, tempfolder;
+function renderMosaic (user, callback) {
+	var orientedImage, croppedUserImage, userTiles, matchedTiles, croppedUserImageHQ, tempfolder, finalOverlay;
 
 	async.waterfall([
 		function ($) {
-			orientImage(userimage, $)
+			orientImage(user.userimage, $)
 		},
 
 		function (_orientedImage, $) {
 			orientedImage = _orientedImage;
+
+			user.orientedImage = orientedImage;
 
 			cropUserImage(orientedImage, $);
 		},
@@ -27,7 +29,7 @@ function renderMosaic (userimage, doHQ, callback, callbackHQ) {
 		function (_croppedUserImage, $) {
 			croppedUserImage = _croppedUserImage;
 
-			tempfolder = path.join( path.dirname(userimage), utils.removeFileExt(path.basename(userimage)), '/' );
+			tempfolder = path.join( path.dirname(user.userimage), utils.removeFileExt(path.basename(user.userimage)), '/' );
 
 			// TO COMPARE THE ANALYZING ALGORITHMS, USE COMMENTED CODE BELOW:
 
@@ -69,7 +71,6 @@ function renderMosaic (userimage, doHQ, callback, callbackHQ) {
 		function (_userTiles, $) {
 			userTiles = _userTiles;
 			// userTiles are the analyzed tiles of the user image
-			// they dont need to be stored in the DB as they are different for each request (image upload)
 
 			matchTiles(userTiles, $);
 		},
@@ -77,52 +78,66 @@ function renderMosaic (userimage, doHQ, callback, callbackHQ) {
 		function (_matchedUserTiles, $) {
 			matchedUserTiles = _matchedUserTiles;
 
+			// save these to user for HQ version later on:
+			user.matchedUserTiles = matchedUserTiles;
+
 			// now stich it:
 			stitchMosaic(croppedUserImage, matchedUserTiles, 'normalfile', tempfolder, $);
 		},
 
 		function (mosaicimage, $) {
-
-			// add underlay and overlay:
-			addOverlayAndUnderlay(mosaicimage, $);
+			// add overlay:
+			// and base the filename on the userid (so that hackers dont find out we're storing everything:p)
+			addOverlay(mosaicimage, user._id, $);
 		},
 
-		function (underlay, overlay, $) {
-			callback(null, underlay, overlay);
+		function (_overlay, $) {
+			finalOverlay = _overlay;
 
-			if(!doHQ) return $(null, null);
+			user.finalOverlay = finalOverlay;
 
-			// begin HQ version:
-			cropUserImageHQ(orientedImage, $);
+			// save uesr
+			mongobase.updateUser(user, $);
+		}
+
+	], function (err, user) {
+		if(err) return callback(err);
+		return callback(null, finalOverlay, user);
+	});
+}
+
+function renderMosaicHQ (user, callback) {
+	var croppedUserImage, finalOverlayHQ;
+	var tempfolder = path.join( path.dirname(user.userimage), utils.removeFileExt(path.basename(user.userimage)), '/' );
+
+	async.waterfall([
+		function ($) {
+
+			cropUserImageHQ(user.orientedImage, $);
 		},
 
 		function (_croppedUserImageHQ, $) {
-			if(!doHQ) return $(null, null);
-
 			croppedUserImageHQ = _croppedUserImageHQ;
 
-			stitchMosaic(croppedUserImageHQ, matchedUserTiles, 'hqfile', tempfolder, $);
+			stitchMosaic(croppedUserImageHQ, user.matchedUserTiles, 'hqfile', tempfolder, $);
 		},
 
 		function (mosaicimageHQ, $) {
-			if(!doHQ) return $(null, null, null);
+			// rename that mosaic to something with the userid:
 
-			// add underlay and overlay:
-			addOverlayAndUnderlayHQ(mosaicimageHQ, $);
-
+			finalOverlayHQ = path.join(path.dirname(mosaicimageHQ), user._id + ".jpg");
+			fs.rename(mosaicimageHQ, finalOverlayHQ, $);
 		},
 
-		function (underlay, overlay, $) {
-			if(!doHQ) return $();
+		function ($) {
+			user.finalOverlayHQ = finalOverlayHQ;
 
-			callbackHQ(null, underlay, overlay);
-
-			$();
+			mongobase.updateUser(user, $);
 		}
-
-	], function (err) {
+	], function (err, dbres) {
 		if(err) return callback(err);
-		return; //callbacks have been called in the waterfall itself
+		// dont overlay HQ version, its to heavy
+		return callback(null, finalOverlayHQ, user);
 	});
 }
 
@@ -176,8 +191,8 @@ function analyzeUserImage (inputimage, tempfolder, callback) {
 			tileFiles = 'tile_%0'+(''+tilesinfo.total).length+'d.png'; // create some filename like tile_%05d.png
 			tileFiles = path.join( tempfolder, tileFiles );
 
-			console.log('> slicing user image into tiles of ' + config.mosaic.tile.width + 'x' + config.mosaic.tile.height + ' into ' + tileFiles);
-			image.slice( inputimage, config.mosaic.tile.width, config.mosaic.tile.height, tileFiles, $);
+			console.log('> slicing user image into tiles of ' + config.mosaic.tile.size + 'x' + config.mosaic.tile.size + ' into ' + tileFiles);
+			image.slice( inputimage, config.mosaic.tile.size, config.mosaic.tile.size, tileFiles, $);
 		},
 
 		function (imageres, $) {
@@ -384,57 +399,29 @@ function stitchMosaic2 (mainimage, usertiles, fileParameter, tempfolder, callbac
 	});
 }
 
-function addOverlayAndUnderlay (inputimage, callback) {
+function addOverlay (inputimage, userid, callback) {
+	// base the last filename on the userid:
+
 	var time = Date.now();
 	var basename = utils.removeFileExt(inputimage);
 
-	var outputfileUnderlayOnly = basename + "_underlay.png";
-	var outputfile = basename + "_overlayed.jpg";
+	var outputfile = path.join(path.dirname(basename), userid + ".png");
 
-	image.addUnderlayOverlay (
+	image.addOverlay (
 		inputimage,
-		path.join(ROOTDIR, config.mosaic.greetingcard.lowres.underlay),
 		path.join(ROOTDIR, config.mosaic.greetingcard.lowres.overlay),
 		config.mosaic.greetingcard.lowres.offset.x,
 		config.mosaic.greetingcard.lowres.offset.y,
-		outputfileUnderlayOnly,
 		outputfile,
 		function (err) {
 			if(err) return callback(err);
 
-			console.log('> adding overlay and underlay took ' + (Date.now() - time) + ' ms');
+			console.log('> adding overlay took ' + (Date.now() - time) + ' ms');
 
-			return callback(null, outputfileUnderlayOnly, outputfile);
+			return callback(null, outputfile);
 		}
 	);
 }
-
-function addOverlayAndUnderlayHQ (inputimage, callback) {
-	var time = Date.now();
-	var basename = utils.removeFileExt(inputimage);
-
-	var outputfileUnderlayOnly = basename + "_underlayhq.jpg";
-	var outputfile = basename + "_overlayedhq.jpg";
-
-	image.addUnderlayOverlay (
-		inputimage,
-		path.join(ROOTDIR, config.mosaic.greetingcard.highres.underlay),
-		path.join(ROOTDIR, config.mosaic.greetingcard.highres.overlay),
-		config.mosaic.greetingcard.highres.offset.x,
-		config.mosaic.greetingcard.highres.offset.y,
-		outputfileUnderlayOnly,
-		outputfile,
-		function (err) {
-			if(err) return callback(err);
-
-			console.log('> adding overlay and underlay took (HQ) ' + (Date.now() - time) + ' ms');
-
-			return callback(null, outputfileUnderlayOnly, outputfile);
-		}
-	);
-}
-
-
 
 function findClosestTile(tiles, usertile, maxNrOfUseOfSameTile, minSpaceBetweenSameTile){
 	var closestTile = null;
@@ -480,3 +467,6 @@ function findClosestTile(tiles, usertile, maxNrOfUseOfSameTile, minSpaceBetweenS
 
 
 exports.renderMosaic = renderMosaic;
+exports.renderMosaicHQ = renderMosaicHQ;
+
+
