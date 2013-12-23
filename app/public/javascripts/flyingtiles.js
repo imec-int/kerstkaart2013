@@ -5,7 +5,7 @@ var FlyingTiles = function (options){
 	var fakeTileEls = $('.faketile');
 
 	var flyingTileIndex = 0;
-	var flyingTimeout = 150; // time between flying tiles
+	var flyingTimeout = 300; // time between flying tiles
 
 	var init = function (){
 		console.log("Flying tiles module loaded");
@@ -53,7 +53,6 @@ var FlyingTiles = function (options){
 			var top    = (originalCard.mosaicOffsetY + originalTile.top) * scaleValue;
 			var size   = originalTile.size * scaleValue;
 
-
 			$(elem).css({
 				left   : left + 'px',
 				top    : top  + 'px',
@@ -72,25 +71,25 @@ var FlyingTiles = function (options){
 
 			y += 59*scaleValue; // position the tile so that it's outlined with the top of the card
 
-			// // first 4 tiles should go on the left:
-			// if(0 <= i && i < 4){
-			// 	x -= 100;
-			// 	y += verticalOffsetLeft;
+			// first 4 tiles should go on the left:
+			if(0 <= i && i < 4){
+				x -= 100;
+				y += verticalOffsetLeft;
 
-			// 	verticalOffsetLeft += 137;
-			// }
+				verticalOffsetLeft += 137;
+			}
 
-			// // next 4 tiles should go on the right:
-			// if(4 <= i && i < 8){
+			// next 4 tiles should go on the right:
+			if(4 <= i && i < 8){
 
-			// 	x += 747;
-			// 	y += verticalOffsetRight;
+				x += 747;
+				y += verticalOffsetRight;
 
-			// 	verticalOffsetRight += 137;
-			// }
+				verticalOffsetRight += 137;
+			}
 
-			// // other tiles should be positioned outside the window:
-			// if(8 <= i){
+			// other tiles should be positioned outside the window:
+			if(8 <= i){
 				// also, make them as big as possible:
 				scale = originalTile.maxsize/size;
 
@@ -110,7 +109,7 @@ var FlyingTiles = function (options){
 					x += distanceToWindowBorder + cardEl.width() + size*scale;
 				y += randomHorizontalPosition;
 
-			// }
+			}
 
 			// apply their position and scale:
 			if(Modernizr.csstransforms3d) {

@@ -138,6 +138,7 @@ var Upload = function (options){
 	};
 
 	var onWebcamClick = function (event) {
+		$(".webcamwrapper").show();
 		navigator.myGetMedia({ video: true }, onWebcamConnect, onWebcamError);
 	};
 
@@ -147,7 +148,6 @@ var Upload = function (options){
 		var video = $("#video")[0];
 		video.src = window.URL ? window.URL.createObjectURL(stream) : stream;
 		video.play();
-		$(".webcamwrapper").show();
 
 		console.log("webcam is playing");
 	};

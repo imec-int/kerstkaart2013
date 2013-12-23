@@ -72,7 +72,7 @@ app.get('/fancybg', function (req, res){
 
 app.get('/', function (req, res){
 	var md = new MobileDetect(req.headers['user-agent']);
-	renderView(req, res, true, md.mobile(), false);  // put the first boolean back on 'true' if your really want the fancy bg
+	renderView(req, res, false, md.mobile(), false);  // put the first boolean back on 'true' if your really want the fancy bg
 });
 
 app.get('/simple', function (req, res){
@@ -214,7 +214,6 @@ function renderMosaic (user, userimage, req, res) {
 
 				console.log( "Mosaic ready... sending it back to browser" );
 				console.log( utils.wwwdfy(mosaicimage) );
-				console.log('TROLOLOLOOL ' + mosaicimage);
 				res.send({
 					mosaicimage: utils.wwwdfy(mosaicimage),
 					userid: user._id
