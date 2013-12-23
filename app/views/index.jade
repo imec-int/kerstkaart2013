@@ -69,14 +69,16 @@ html
 			ga('send', 'pageview');
 
 	body
+		if mobile
+			script.
+				mixpanel.track("Page View",{"fancybg":"#{fancybg}", "mobile":true})
+		else
+			script.
+				mixpanel.track("Page View",{"fancybg":"#{fancybg}", "mobile":false})
 		if fancybg
 			iframe.fancybg(src="/fancybg")
-			script.
-				mixpanel.track("Page View",{"fancybg":true})
 		else
 			.staticbg
-			script.
-				mixpanel.track("Page View",{"fancybg":false})
 
 		.overlay
 			.title

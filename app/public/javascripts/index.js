@@ -8,8 +8,12 @@ $(function(){
 	var mailid = urlParam('mail')
 	if(mailid){
 		var mail = decodeURI(mailid);
-		console.log("mail: "+mail);
-		mixpanel.identify(mail);
+		if(mixpanel)
+			console.log("mail: "+mail);
+			mixpanel.identify(mail);
+			mixpanel.people.set({
+    			"$email": mail
+    		});
 	}
 
 	function urlParam(name){
