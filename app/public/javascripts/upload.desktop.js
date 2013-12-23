@@ -66,6 +66,7 @@ var Upload = function (options){
 					$(".userchristmascard").addClass('visible');
 					Sharing.renderButtons(data);
 					$(".userchristmascard").click(function (event) {
+						mixpanel.track("High Quality",{"capture":"oldFashioned", "clickedOn":"card", "device":"desktop", "userid":data.userid});
 						window.location = '/highquality/' + data.userid;
 					});
 				}, options.flyingTiles.flyingTime);
@@ -97,6 +98,7 @@ var Upload = function (options){
 				mixpanel.track("fileUpload success",{"device":"desktop", "userid":data.userid});
 				$(".userchristmascard").click(function (event) {
 					// window.location = '/highquality/' + data.userid;
+					mixpanel.track("High Quality",{"capture":"fileUpload", "clickedOn":"card", "device":"desktop", "userid":data.userid});
 					window.open('/highquality/' + data.userid);
 				});
 			}, options.flyingTiles.flyingTime);
@@ -207,7 +209,7 @@ var Upload = function (options){
 				Sharing.renderButtons(data);
 				mixpanel.track("onWebcamPictureSuccess",{"device":"desktop", "userid":data.userid});
 				$(".userchristmascard").click(function (event) {
-					mixpanel.track("High Quality",{"capture":"webcam", "device":"desktop", "userid":data.userid});
+					mixpanel.track("High Quality",{"capture":"webcam", "clickedOn":"card", "device":"desktop", "userid":data.userid});
 					// window.location = '/highquality/' + data.userid;
 					window.open('/highquality/' + data.userid);
 				});

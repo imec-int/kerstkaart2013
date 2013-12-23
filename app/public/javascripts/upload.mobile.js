@@ -36,6 +36,7 @@ var Upload = function (options){
 				Sharing.renderButtons(data);
 				mixpanel.track("Mobile Cam success",{"userid":data.userid});
 				$(".userchristmascard").click(function (event) {
+					mixpanel.track("High Quality",{"capture":"mobile", "clickedOn":"card", "device":"mobile", "userid":data.userid});
 					// window.location = '/highquality/' + data.userid;
 					window.open('/highquality/' + data.userid);
 				});
