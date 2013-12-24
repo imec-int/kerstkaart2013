@@ -147,6 +147,7 @@ var Upload = function (options){
 
 	var onWebcamClick = function (event) {
 		mixpanel.track("onWebcamClick");
+		$(".webcamNotification").show();
 		navigator.myGetMedia({ video: true }, onWebcamConnect, onWebcamError);
 	};
 
@@ -159,6 +160,7 @@ var Upload = function (options){
 		mixpanel.track("onWebcamConnect");
 
 		$(".webcamwrapper").show();
+		$(".webcamNotification").hide();
 		console.log("webcam is playing");
 	};
 
