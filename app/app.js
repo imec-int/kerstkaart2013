@@ -23,7 +23,7 @@ app.configure(function(){
 	app.set('views', __dirname + '/views');
 	app.set('view engine', 'jade');
 	app.use(express.favicon());
-	app.use(express.logger('tiny'));
+	if(config.showExpressDebugInfo) app.use(express.logger('tiny'));
 	app.use(express.bodyParser());
 	app.use(express.methodOverride());
 	app.use(express.cookieParser('kerstkaart2013bbbbb4645sf6s4fs'));
@@ -59,7 +59,7 @@ app.get('/fancybg', function (req, res){
 		tiles = tiles.slice(0, 40); // limit to 50 tiles everywhere
 
 		if( md.mobile() ){
-			console.log('its a mobile');
+			if(config.showDebugInfo) console.log('its a mobile');
 			tiles = tiles.slice(0, 16); // limit to 20 tiles on mobile
 		}
 
@@ -140,7 +140,7 @@ app.post('/xhrupload', function (req, res){
 	});
 
 	req.on('end', function () {
-		console.log("Upload done");
+		if(config.showDebugInfo) console.log("XHR Upload done");
 		ws.end();
 		renderMosaic(null, uploadedFile, req, res);
 	});
@@ -208,9 +208,9 @@ function renderMosaic (user, userimage, req, res) {
 
 		// var testimage = 'http://onlyhdwallpapers.com/wallpaper/room_blocks_fractal_boxes_illusions_rubiks_cube_rubix_desktop_5000x5000_hd-wallpaper-227252.png';
 
-		console.log( "Mosaic ready... sending it back to browser" );
-		console.log( utils.wwwdfy(mosaicimage) );
-		console.log( "Generating twitpic url" );
+		if(config.showDebugInfo) console.log( "Mosaic ready... sending it back to browser" );
+		if(config.showDebugInfo) console.log( utils.wwwdfy(mosaicimage) );
+		if(config.showDebugInfo) console.log( "Generating twitpic url" );
 		twitimage.twitPicImage(mosaicimage, function (err, twiturl) {
 
 			// dont check errors
@@ -249,8 +249,8 @@ app.get('/highquality/:userid', function (req, res) {
 
 app.post('/api/renderhq', function (req, res) {
 	function respondToBrowser (user) {
-		console.log( user.finalOverlayHQ );
-		console.log( utils.wwwdfy(user.finalOverlayHQ) );
+		if(config.showDebugInfo) console.log( user.finalOverlayHQ );
+		if(config.showDebugInfo) console.log( utils.wwwdfy(user.finalOverlayHQ) );
 		res.send({
 			mosaicimageHQ: utils.wwwdfy(user.finalOverlayHQ),
 			userid: user._id
@@ -264,13 +264,13 @@ app.post('/api/renderhq', function (req, res) {
 
 		// check if HQ is not already rendered:
 		if(user.finalOverlayHQ){
-			console.log( "Mosaic HQ already done... sending it back to browser" );
+			if(config.showDebugInfo) console.log( "Mosaic HQ already done... sending it back to browser" );
 
 			return respondToBrowser(user);
 		}else{
 			mosaic.renderMosaicHQ( user, function (err, mosaicimageHQ, user) {
 				if(err) return utils.sendError(err, res);
-				console.log( "Mosaic HQ ready... sending it back to browser" );
+				if(config.showDebugInfo) console.log( "Mosaic HQ ready... sending it back to browser" );
 
 				respondToBrowser(user);
 			});
