@@ -52,13 +52,12 @@ function renderMosaic (user, callback) {
 			// 			var s = (userTiles[i].hsb.s - userTiles2[i].hsb.s);
 			// 			var b = (userTiles[i].hsb.b - userTiles2[i].hsb.b);
 
-			// 			// console.log("> difference: " + Math.round(h) + " " + Math.round(s) + " " + Math.round(b) );
+			// 			// if(config.showDebugInfo) console.log("> difference: " + Math.round(h) + " " + Math.round(s) + " " + Math.round(b) );
 
 			// 			if(Math.abs(h) > 3 || Math.abs(b) > 3 || Math.abs(s) > 3)
 			// 				differenceCount++;
 			// 		};
-
-			// 		console.log("> differenceCount: " + differenceCount);
+			//		if(config.showDebugInfo) console.log("> differenceCount: " + differenceCount);
 
 			// 		$(null, userTiles2);
 			// 	});
@@ -125,7 +124,7 @@ function renderMosaicHQ (user, callback) {
 		function (mosaicimageHQ, $) {
 			// rename that mosaic to something with the userid:
 
-			finalOverlayHQ = path.join(path.dirname(mosaicimageHQ), user._id + ".jpg");
+			finalOverlayHQ = path.join(path.dirname(mosaicimageHQ), user._id + "_hq.jpg");
 			fs.rename(mosaicimageHQ, finalOverlayHQ, $);
 		},
 
@@ -154,7 +153,7 @@ function cropUserImage (inputimage, callback) {
 	var tilesinfo = utils.getTilesInfo();
 	var croppedImage = utils.removeFileExt(inputimage) + '_cropped.jpg';
 
-	console.log('> cropping userimage to ' + tilesinfo.width + 'x' + tilesinfo.height + ' ==> ' + croppedImage);
+	if(config.showDebugInfo) console.log('> cropping userimage to ' + tilesinfo.width + 'x' + tilesinfo.height + ' ==> ' + croppedImage);
 
 	image.crop( inputimage, tilesinfo.width, tilesinfo.height, croppedImage, function (err, data){
 		if(err) return callback(err);
@@ -166,7 +165,7 @@ function cropUserImageHQ (inputimage, callback) {
 	var tilesinfo = utils.getTilesInfo();
 	var croppedImage = utils.removeFileExt(inputimage) + '_croppedHQ.jpg';
 
-	console.log('> HQ: cropping userimage to ' + tilesinfo.widthHQ + 'x' + tilesinfo.heightHQ + ' ==> ' + croppedImage);
+	if(config.showDebugInfo) console.log('> HQ: cropping userimage to ' + tilesinfo.widthHQ + 'x' + tilesinfo.heightHQ + ' ==> ' + croppedImage);
 
 	image.crop( inputimage, tilesinfo.widthHQ, tilesinfo.heightHQ, croppedImage, function (err, data){
 		if(err) return callback(err);
@@ -191,7 +190,7 @@ function analyzeUserImage (inputimage, tempfolder, callback) {
 			tileFiles = 'tile_%0'+(''+tilesinfo.total).length+'d.png'; // create some filename like tile_%05d.png
 			tileFiles = path.join( tempfolder, tileFiles );
 
-			console.log('> slicing user image into tiles of ' + config.mosaic.tile.size + 'x' + config.mosaic.tile.size + ' into ' + tileFiles);
+			if(config.showDebugInfo) console.log('> slicing user image into tiles of ' + config.mosaic.tile.size + 'x' + config.mosaic.tile.size + ' into ' + tileFiles);
 			image.slice( inputimage, config.mosaic.tile.size, config.mosaic.tile.size, tileFiles, $);
 		},
 
@@ -205,7 +204,7 @@ function analyzeUserImage (inputimage, tempfolder, callback) {
 			};
 
 			// don't do more than 10 cuncurrent operations or we will get ImageMagick errors:
-			console.log('> get average color for each tile');
+			if(config.showDebugInfo) console.log('> get average color for each tile');
 			async.eachLimit(usertiles, 10, function (tile, $for){
 				image.getAverageHSBColor(tile.temptilefile, function (err, hsb){
 					if(err) return $for(err);
@@ -217,7 +216,7 @@ function analyzeUserImage (inputimage, tempfolder, callback) {
 		},
 
 		function ($) {
-			console.log('> time to analyze with technique 1 was ' + (Date.now() - time) + ' ms');
+			if(config.showDebugInfo) console.log('> time to analyze with technique 1 was ' + (Date.now() - time) + ' ms');
 
 			$();
 		}
@@ -244,14 +243,14 @@ function analyzeUserImage2 (inputimage, tempfolder, callback) {
 			// let's resize the image so that 1px = 1 tile
 			onePixelImage = path.join( tempfolder, 'one_pixel_image.png' );
 
-			console.log('> resizing to one pixel image');
+			if(config.showDebugInfo) console.log('> resizing to one pixel image');
 			image.resize(inputimage, tilesinfo.wide, tilesinfo.heigh, onePixelImage, $);
 		},
 
 		function (imageres, $) {
-			// now lets read all pixels it up
+			// now lets read all pixels out
 
-			console.log('> reading out pixel values');
+			if(config.showDebugInfo) console.log('> reading out pixel values');
 			image.readAllPixels(onePixelImage, tilesinfo.wide, tilesinfo.heigh, $);
 		},
 
@@ -262,7 +261,7 @@ function analyzeUserImage2 (inputimage, tempfolder, callback) {
 				onePixelTiles.push( {index: i, hsb: pixels[i]} );
 			};
 
-			console.log('> time to analyze with technique 2 was ' + (Date.now() - time) + ' ms');
+			if(config.showDebugInfo) console.log('> time to analyze with technique 2 was ' + (Date.now() - time) + ' ms');
 
 			$();
 		},
@@ -281,7 +280,7 @@ function matchTiles (usertiles, callback) {
 		for (var i = 0; i < L; i++) {
 			var o = findClosestTile(tiles, usertiles[i], config.mosaic.maxuseofsametile, config.mosaic.minspacebetweensametile);
 
-			// console.log("> " + tiles[i].temptilefile + " - smallestDifference: " + o.smallestDifference);
+			// if(config.showDebugInfo) console.log("> " + tiles[i].temptilefile + " - smallestDifference: " + o.smallestDifference);
 
 			// save the match in the tile
 			usertiles[i].normalfile = o.closestTile.tile;
@@ -306,29 +305,29 @@ function stitchMosaic (mainimage, usertiles, fileParameter, tempfolder, callback
 
 			// sort it before we stitch it:
 			usertiles = _.sortBy(usertiles, function (tile){ return tile.index; });
-			// console.log(usertiles);
+			// if(config.showDebugInfo) console.log(usertiles);
 
 			var inputfiles = [];
 			for (var i = 0; i < usertiles.length; i++) {
 				inputfiles.push( path.join(ROOTDIR, usertiles[i][fileParameter]) ); // fileParameter can be 'normalfile' or 'hqfile'
 			};
 
-			console.log('> stitching mosaic (' + fileParameter + ')');
+			if(config.showDebugInfo) console.log('> stitching mosaic (' + fileParameter + ')');
 			stitchingTime = Date.now();
 			image.stitchImages(inputfiles, tilesinfo.wide, tilesinfo.heigh, mosaicimage, $);
 		},
 
 		function (imageres, $) {
-			console.log('> time to stitch was ' + (Date.now() - stitchingTime) + ' ms (' + fileParameter + ')');
+			if(config.showDebugInfo) console.log('> time to stitch was ' + (Date.now() - stitchingTime) + ' ms (' + fileParameter + ')');
 
 			// overlay stitched image with original:
-			console.log('> overlaying mosaic (' + fileParameter + ')');
+			if(config.showDebugInfo) console.log('> overlaying mosaic (' + fileParameter + ')');
 			overlayTime = Date.now();
 			image.overlayImages( mainimage, mosaicimage, mosaicimage_overlayed, $);
 		},
 
 		function (imageres, $) {
-			console.log('> time to overlay was ' + (Date.now() - overlayTime) + ' ms (' + fileParameter + ')');
+			if(config.showDebugInfo) console.log('> time to overlay was ' + (Date.now() - overlayTime) + ' ms (' + fileParameter + ')');
 
 			$();
 		}
@@ -373,22 +372,22 @@ function stitchMosaic2 (mainimage, usertiles, fileParameter, tempfolder, callbac
 			var inputfiles = path.join( tempfolder,  destinationFileString + '[0-' + (tilesinfo.total-1) + ']'); // tile_%05d.jpg[0-3999]
 			inputfiles = [inputfiles]; //expects an array of files
 
-			console.log('> stitching mosaic (' + fileParameter + ')');
+			if(config.showDebugInfo) console.log('> stitching mosaic (' + fileParameter + ')');
 			stitchingTime = Date.now();
 			image.stitchImages(inputfiles, tilesinfo.wide, tilesinfo.heigh, mosaicimage, $);
 		},
 
 		function (imageres, $) {
-			console.log('> time to stitch with technique 2 was ' + (Date.now() - stitchingTime) + ' ms (' + fileParameter + ')');
+			if(config.showDebugInfo) console.log('> time to stitch with technique 2 was ' + (Date.now() - stitchingTime) + ' ms (' + fileParameter + ')');
 
 			// overlay stitched image with original:
-			console.log('> overlaying mosaic (' + fileParameter + ')');
+			if(config.showDebugInfo) console.log('> overlaying mosaic (' + fileParameter + ')');
 			overlayTime = Date.now();
 			image.overlayImages( mainimage, mosaicimage, mosaicimage_overlayed, $);
 		},
 
 		function (imageres, $) {
-			console.log('> time to overlay was ' + (Date.now() - overlayTime) + ' ms (' + fileParameter + ')');
+			if(config.showDebugInfo) console.log('> time to composite was ' + (Date.now() - overlayTime) + ' ms (' + fileParameter + ')');
 
 			$();
 		}
@@ -416,7 +415,7 @@ function addOverlay (inputimage, userid, callback) {
 		function (err) {
 			if(err) return callback(err);
 
-			console.log('> adding overlay took ' + (Date.now() - time) + ' ms');
+			if(config.showDebugInfo) console.log('> adding greetingcard overlay took ' + (Date.now() - time) + ' ms');
 
 			return callback(null, outputfile);
 		}
@@ -446,7 +445,7 @@ function findClosestTile(tiles, usertile, maxNrOfUseOfSameTile, minSpaceBetweenS
 		var diff_total = diff_h + diff_s + diff_b;
 		// var diff_total = diff_b;
 
-		// console.log(tile.tile + ' h:' + tile.hsb.h + ', given h:' + usertile.hsb.h + ', difference: ' + diff_h);
+		// if(config.showDebugInfo) console.log(tile.tile + ' h:' + tile.hsb.h + ', given h:' + usertile.hsb.h + ', difference: ' + diff_h);
 
 		if(!closestTile || diff_total < smallestDifference){
 			closestTile = tile;
