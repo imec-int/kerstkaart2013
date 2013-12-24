@@ -59,6 +59,9 @@ html
 				a(href='//pinterest.com/pin/create/link/?url=${sharing.sharebleUrl}&media=${sharing.imageUrl}&description=${sharing.messageNoHash}', target='blank')
 					img(src='/images/social/pinter-ball-64.png')
 
+				.retry
+					a(href="", onclick="mixpanel.track('Retry');window.location.reload(false);return false;") Probeer opnieuw!
+
 
 		include analytics
 
