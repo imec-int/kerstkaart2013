@@ -40,7 +40,7 @@ html
 					a(href="/highquality/${userid}", onclick="mixpanel.track('High Quality',{'clickedOn':'link'});return true;", target="_blank") Hoge kwaliteitsversie
 
 				//- TWITTER
-				a(href='http://twitter.com/home?status=${sharing.message}%20${twitpic}', target='blank')
+				a(href='http://twitter.com/home?status=${sharing.message}%20${twitpic}%20${sharing.url}', target='blank')
 					img(src='/images/social/twitter-ball-64.png')
 
 				//- FACEBOOK
