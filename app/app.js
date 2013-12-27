@@ -42,8 +42,6 @@ http.createServer(app).listen(app.get('port'), function(){
 });
 
 app.get('/fancybg', function (req, res){
-	var md = new MobileDetect(req.headers['user-agent']);
-
 	mongobase.getAllTilesWithTitle(function (err, fulltiles) {
 		if(err) return utils.sendError(err, res);
 
@@ -58,7 +56,7 @@ app.get('/fancybg', function (req, res){
 
 		tiles = tiles.slice(0, 40); // limit to 50 tiles everywhere
 
-		if( md.mobile() ){
+		if( isMobile(req) ){
 			if(config.showDebugInfo) console.log('its a mobile');
 			tiles = tiles.slice(0, 16); // limit to 20 tiles on mobile
 		}
@@ -66,19 +64,17 @@ app.get('/fancybg', function (req, res){
 		res.render('fancybg', {
 			title: 'background | MiX Kerstkaart 2013',
 			tiles: tiles,
-			mobile: md.mobile()
+			mobile: isMobile(req)
 		});
 	})
 });
 
 app.get('/', function (req, res){
-	var md = new MobileDetect(req.headers['user-agent']);
-	renderView(req, res, true, md.mobile(), false);  // put the first boolean back on 'true' if your really want the fancy bg
+	renderView(req, res, true, isMobile(req), false);  // put the first boolean back on 'true' if your really want the fancy bg
 });
 
 app.get('/simple', function (req, res){
-	var md = new MobileDetect(req.headers['user-agent']);
-	renderView(req, res, false, md.mobile(), false);
+	renderView(req, res, false, isMobile(req), false);
 });
 
 // force mobile (for testing purposes):
@@ -88,8 +84,7 @@ app.get('/mobile', function (req, res){
 
 // force oldfashion upload (for testing purposes):
 app.get('/oldfashionupload', function (req, res) {
-	var md = new MobileDetect(req.headers['user-agent']);
-	renderView(req, res, false, md.mobile(), true);
+	renderView(req, res, false, isMobile(req), true);
 });
 
 // force desktop
@@ -342,4 +337,14 @@ function createSharingObject (user) {
 	return sharing;
 }
 
+function isMobile(req){
+	if(!req.headers['user-agent'])
+		return false;
+
+	var md = new MobileDetect(req.headers['user-agent']);
+	if( md.mobile() )
+		return true;
+	else
+		return false;
+}
 
