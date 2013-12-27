@@ -117,6 +117,13 @@ html
 								.takepicture
 									| Neem foto
 								canvas#canvas
+
+			if !mobile
+				a.tryotheruploadinfo(href='/oldfashionupload')
+					| Werken de knoppen niet?
+					br
+					| Probeer dan de oude uploadmethode.
+
 			.sharewrapper
 
 			br

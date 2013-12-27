@@ -17,6 +17,7 @@ var Upload = function (options){
 			// then it probably doesn't have webcam support either
 
 			normalFileuploadButtons.hide();
+			$(".tryotheruploadinfo").hide();
 			oldFashionedUploadButtons.show();
 
 			checkOldFashionUploadCallback();
@@ -44,6 +45,7 @@ var Upload = function (options){
 
 			// hide the photo button:
 			buttonEl.hide();
+			$(".tryotheruploadinfo").hide();
 
 			// start animation to keep the user busy:
 			setTimeout(function () {
@@ -79,6 +81,7 @@ var Upload = function (options){
 	var onFileuploadChange = function (event){
 		// hide the photo button:
 		buttonEl.hide();
+		$(".tryotheruploadinfo").hide();
 		mixpanel.track("fileUpload start",{"device":"desktop"});
 
 		// start animation to keep the user busy:
@@ -193,6 +196,7 @@ var Upload = function (options){
 
 		// remove other buttons:
 		buttonEl.hide();
+		$(".tryotheruploadinfo").hide();
 
 		// start tile flying animation:
 		options.flyingTiles.letTheTilesFly();
