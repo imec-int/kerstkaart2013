@@ -84,7 +84,7 @@ app.get('/mobile', function (req, res){
 
 // force oldfashion upload (for testing purposes):
 app.get('/oldfashionupload', function (req, res) {
-	renderView(req, res, false, isMobile(req), true);
+	renderView(req, res, false, false, true);
 });
 
 // force desktop
