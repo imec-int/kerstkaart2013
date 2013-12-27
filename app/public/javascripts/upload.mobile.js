@@ -1,6 +1,6 @@
 var Upload = function (options){
 
-	var userHasNoFileUploadMsg = "Jammer, je toestel kan ons geen toegang tot je camera geven. Upgrade of probeer het op een desktop pc.";
+	var userHasNoFileUploadMsg = "Jammer, het lijkt er op dat je toestel ons geen toegang tot je camera kan geven. Upgrade, probeer het op een ander toestel of desktop pc.";
 	var fileuploadEl = $("#fileinput");
 	var buttonEl = $('.buttons');
 
@@ -8,7 +8,7 @@ var Upload = function (options){
 		console.log("Mobile upload module loaded");
 		fileuploadEl.bind('change', onFileuploadChange);
 
-		if(!hasFileUploadApi){
+		if( !hasFileUploadApi() || !hasFileInput() ){
 			// inform the user he has no file upload capabilities:
 			mixpanel.track("noFileUploadSupport");
 			alert(userHasNoFileUploadMsg);
@@ -86,6 +86,19 @@ var Upload = function (options){
 
 	var hasFileUploadApi = function () {
 		return !! ( window.FormData && ("upload" in ($.ajaxSettings.xhr()) ));
+	};
+
+	var hasFileInput = function () {
+		// from: http://viljamis.com/blog/2012/file-upload-support-on-mobile/
+
+		// Handle devices which falsely report support
+		if (navigator.userAgent.match(/(Android (1.0|1.1|1.5|1.6|2.0|2.1))|(Windows Phone (OS 7|8.0))|(XBLWP)|(ZuneWP)|(w(eb)?OSBrowser)|(webOS)|(Kindle\/(1.0|2.0|2.5|3.0))/)) {
+			return false;
+		}
+		// Create test element
+		var el = document.createElement("input");
+		el.type = "file";
+		return !el.disabled;
 	};
 
 	return {
