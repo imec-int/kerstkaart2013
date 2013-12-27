@@ -147,7 +147,7 @@ var Upload = function (options){
 
 	var onWebcamClick = function (event) {
 		mixpanel.track("onWebcamClick");
-		$(".webcamNotification").show();
+		showWebcamNotification();
 		navigator.myGetMedia({ video: true }, onWebcamConnect, onWebcamError);
 	};
 
@@ -160,7 +160,7 @@ var Upload = function (options){
 		mixpanel.track("onWebcamConnect");
 
 		$(".webcamwrapper").show();
-		$(".webcamNotification").hide();
+		hideWebcamNotification();
 		console.log("webcam is playing");
 	};
 
@@ -219,6 +219,16 @@ var Upload = function (options){
 		})
 	};
 
+	var showWebcamNotification = function () {
+		$(".webcamNotification").show();
+		if(isChrome()) $(".chromeallowebcamarrow").show();
+	};
+
+	var hideWebcamNotification = function (argument) {
+		$(".webcamNotification").hide();
+		if(isChrome()) $(".chromeallowebcamarrow").hide();
+	};
+
 	var hasFileUploadApi = function () {
 		return !! ( window.FormData && ("upload" in ($.ajaxSettings.xhr()) ));
 	};
@@ -230,6 +240,10 @@ var Upload = function (options){
         navigator.msGetUserMedia);
 
         return navigator.myGetMedia;
+	};
+
+	var isChrome = function () {
+		return /chrom(e|ium)/.test(navigator.userAgent.toLowerCase());
 	};
 
 	return {

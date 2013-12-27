@@ -77,6 +77,8 @@ html
 		else
 			.staticbg
 
+		img.chromeallowebcamarrow.floating(src="/images/chrome_allow_webcam_arrow.png")
+
 		.overlay
 			.title
 				strong MiX
@@ -98,6 +100,7 @@ html
 						#normalupload
 							span#webcambutton.button.left
 								img(src="/images/webcam.png")
+								.webcamNotification Geef toestemming aan de webcam (zie boven)
 							span.button.right
 								img(src="/images/gallery.png")
 								input#fileinput.fileinput(type="file", name="files[]", accept="image/*")
@@ -114,7 +117,6 @@ html
 								.takepicture
 									| Neem foto
 								canvas#canvas
-				span.webcamNotification Geef toestemming aan de webcam (zie boven)
 			.sharewrapper
 
 			br
